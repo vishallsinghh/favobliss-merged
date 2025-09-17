@@ -1,0 +1,59 @@
+import { auth } from "@/auth";
+import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
+import { Navbar } from "@/components/admin/navbar";
+import { ModalProvider } from "@/providers/admin/modal-provider";
+import { ThemeProvider } from "@/providers/admin/theme-provider";
+import "../globals.css";
+
+interface DashboardLayoutPageProps {
+  children: React.ReactNode;
+  params: { storeId: string };
+}
+
+const DashboardLayoutPage = async ({
+  children,
+  params,
+}: DashboardLayoutPageProps) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (
+    !session ||
+    !userId ||
+    session.user?.email !== "piyushthakur241199@gmail.com"
+  ) {
+    redirect("/");
+  }
+
+  // const store = await db.store.findFirst({
+  //   where: {
+  //     id: params.storeId,
+  //     userId,
+  //   },
+  // });
+
+  // if (!store) {
+  //   redirect("/");
+  // }
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <ModalProvider />
+        <Navbar />
+        {/* Main content with proper spacing for sidebar */}
+        <div className="md:pl-64 pt-16 md:pt-0">
+          <main className="p-6 pt-0">{children}</main>
+        </div>
+      </ThemeProvider>
+    </div>
+  );
+};
+
+export default DashboardLayoutPage;
