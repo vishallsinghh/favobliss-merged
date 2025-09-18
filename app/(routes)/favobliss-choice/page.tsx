@@ -92,14 +92,16 @@ const FavoblissChoice = async ({ params, searchParams }: CategoryPageProps) => {
     discount: searchParams.discount,
     isFeatured: true,
   };
-  const { products, totalCount } = await withRetry(() => getProducts(query));
 
-  const sizes = await withRetry(() => getSizes());
-  const colors = await withRetry(() => getColors());
-  const brands = await withRetry(() => getBrands());
-  const locationGroups = await withRetry(() =>
-    getLocationGroups(params.storeId)
-  );
+  // Fetch data in parallel
+  const [{ products, totalCount }, sizes, colors, brands, locationGroups] =
+    await Promise.all([
+      withRetry(() => getProducts(query)),
+      withRetry(() => getSizes()),
+      withRetry(() => getColors()),
+      withRetry(() => getBrands()),
+      withRetry(() => getLocationGroups(params.storeId)),
+    ]);
 
   const sizeMap: { [key: string]: string[] } = {
     TOPWEAR: ["S", "M", "L", "XL", "XXL"],

@@ -36,20 +36,17 @@ export default async function RootLayout({
 }>) {
   const data = await getCategories();
   return (
-    <html lang="en">
-      <link rel="icon" href="/assets/favicon.ico" sizes="any" />
-      <body className={roboto.className}>
-        <ModalProvider />
-        <FlowbiteProvider />
-        <Toaster position="bottom-right" />
-        <Navbar />
-        <div className="min-h-[calc(100%-4rem)] bg-gray-100 flex items-center justify-center py-10">
-          {children}
-        </div>
-        <WhatsAppButton />
-        <Footer categories={data} />
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-      </body>
-    </html>
+    <div>
+      <ModalProvider />
+      <FlowbiteProvider />
+      <Toaster position="bottom-right" />
+      <Navbar />
+      <div className="min-h-[calc(100%-4rem)] bg-gray-100 flex items-center justify-center py-10">
+        {children}
+      </div>
+      <WhatsAppButton />
+      <Footer categories={data} />
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+    </div>
   );
 }
