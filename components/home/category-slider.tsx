@@ -68,7 +68,10 @@ export function CategorySlider(props: Props) {
           grabCursor={true}
         >
           {categories.map((category) => (
-            <SwiperSlide key={category.id} className="flex-shrink-0 w-[100px]">
+            <SwiperSlide
+              key={category.id}
+              className="flex-shrink-0 w-[100px] max-w-fit"
+            >
               <div
                 className="group cursor-pointer flex flex-col items-center"
                 onClick={() => handleCategoryClick(category.slug)}

@@ -49,7 +49,7 @@ const BannerProductSection = (props: Props) => {
             grabCursor={true}
           >
             {products.map((product) => (
-              <SwiperSlide key={product.id} className="flex-shrink-0 w-[160px]">
+              <SwiperSlide key={product.id} className="flex-shrink-0 w-[160px] max-w-[200px]">
                 <ProductCard data={product} locationGroups={locationGroups} />
               </SwiperSlide>
             ))}
