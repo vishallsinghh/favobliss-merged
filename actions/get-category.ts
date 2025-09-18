@@ -9,7 +9,7 @@ export const getCategoryById = async (id: string): Promise<Category> => {
 };
 
 export const getCategoryBySlug = async (slug: string): Promise<Category> => {
-  const res = await fetch(`${URL}?slug=${slug}`, { cache: "no-store" });
+  const res = await fetch(`${URL}/api/admin/${STORE_ID}/categories?slug=${slug}`, { cache: "no-store" });
   if (!res.ok) {
     throw new Error("Category not found");
   }

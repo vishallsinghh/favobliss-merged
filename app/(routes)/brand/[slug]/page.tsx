@@ -16,6 +16,20 @@ import Breadcrumb from "@/components/store/Breadcrumbs";
 import { getLocationGroups } from "@/actions/get-location-group";
 import { getBrands } from "@/actions/get-brands";
 
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  retries = 3,
+  delay = 100
+): Promise<T> {
+  try {
+    return await fn();
+  } catch (error) {
+    if (retries <= 1) throw error;
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    return withRetry(fn, retries - 1, delay * 2);
+  }
+}
+
 interface BrandPageProps {
   params: {
     storeId: string;
@@ -39,7 +53,7 @@ export async function generateMetadata(
   { params, searchParams }: BrandPageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const brand = await getBrandBySlug(params.slug);
+  const brand = await withRetry(() => getBrandBySlug(params.slug));
   const previousImages = (await parent).openGraph?.images || [];
 
   if (!brand) {
@@ -77,8 +91,10 @@ export async function generateMetadata(
 }
 
 const BrandPage = async ({ params, searchParams }: BrandPageProps) => {
-  const brand = await getBrandBySlug(params.slug);
   const page = searchParams.page || "1";
+
+  // Fetch brand first (required for early return and products)
+  const brand = await withRetry(() => getBrandBySlug(params.slug));
 
   if (!brand) {
     return (
@@ -92,22 +108,27 @@ const BrandPage = async ({ params, searchParams }: BrandPageProps) => {
     );
   }
 
-  const { products, totalCount } = await getProducts({
-    brandId: brand.id,
-    type: searchParams.category,
-    colorId: searchParams.colorId,
-    sizeId: searchParams.sizeId,
-    page,
-    price: searchParams.price,
-    limit: "12",
-    rating: searchParams.rating,
-    discount: searchParams.discount,
-  });
-
-  const sizes = await getSizes();
-  const colors = await getColors();
-  const locationGroups = await getLocationGroups();
-  const brands = await getBrands();
+  // Fetch products and static data in parallel
+  const [{ products, totalCount }, sizes, colors, locationGroups, brands] =
+    await Promise.all([
+      withRetry(() =>
+        getProducts({
+          brandId: brand.id,
+          type: searchParams.category,
+          colorId: searchParams.colorId,
+          sizeId: searchParams.sizeId,
+          page,
+          price: searchParams.price,
+          limit: "12",
+          rating: searchParams.rating,
+          discount: searchParams.discount,
+        })
+      ),
+      withRetry(() => getSizes()),
+      withRetry(() => getColors()),
+      withRetry(() => getLocationGroups()),
+      withRetry(() => getBrands()),
+    ]);
 
   const sizeMap: { [key: string]: string[] } = {
     TOPWEAR: ["S", "M", "L", "XL", "XXL"],

@@ -6,6 +6,7 @@ import { AddReviewForm } from "./AddReviewForm";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { getSubCategoryById } from "@/actions/get-subcategory";
+import { VerifiedBadgePremium } from "./verified-badge";
 
 interface Review {
   id: string;
@@ -374,7 +375,7 @@ export const ProductReviews = (props: ProductReviewsProps) => {
           <div className="grid grid-cols-2 lg:grid-cols-2 gap-2 md:gap-8 md:w-1/2 w-full">
             {/* Overall Rating */}
             <div className="flex flex-col items-center">
-              <div className="mb-4">
+              <div className="mb-2">
                 <CircularProgress
                   value={avgRating}
                   size={80}
@@ -486,8 +487,11 @@ export const ProductReviews = (props: ProductReviewsProps) => {
                     </span>
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-800">
-                      {review.userName}
+                    <div className="flex items-center gap-2">
+                      <div className="font-semibold text-gray-800">
+                        {review.userName}
+                      </div>
+                       <VerifiedBadgePremium />
                     </div>
                     <div className="text-sm text-gray-500">
                       {new Date(review.createdAt).toLocaleDateString("en-US", {

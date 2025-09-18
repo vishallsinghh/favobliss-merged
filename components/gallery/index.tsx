@@ -379,8 +379,10 @@ export const Gallery = ({
                       <Image
                         src={media.url}
                         alt="Variant Image"
-                        fill
-                        className="object-contain"
+                        // fill
+                        width={600}
+                        height={600}
+                        className="object-contain rounded-2xl"
                         onLoad={() => handleMediaLoad(media.id)}
                         onError={() => handleMediaError(media.id)}
                         priority={index === 0}
@@ -402,7 +404,7 @@ export const Gallery = ({
                       <video
                         ref={(el) => (videoRefs.current[index] = el)}
                         src={media.url}
-                        className="object-contain max-h-full w-full"
+                        className="object-contain max-h-full w-full rounded-2xl"
                         muted={videoStates[media.id]?.isMuted}
                         loop
                         playsInline
@@ -473,7 +475,7 @@ export const Gallery = ({
                     alt="Variant Image"
                     width={600}
                     height={600}
-                    className="w-full h-auto object-contain object-top max-h-full"
+                    className="w-full h-auto object-contain object-top max-h-full rounded-2xl"
                     onLoad={() => handleMediaLoad(media.id)}
                     onError={() => handleMediaError(media.id)}
                     priority={index === 0}
@@ -495,7 +497,7 @@ export const Gallery = ({
                   <video
                     ref={(el) => (videoRefs.current[index] = el)}
                     src={media.url}
-                    className="object-contain max-h-full w-full h-auto"
+                    className="object-contain max-h-full w-full h-auto rounded-2xl"
                     muted={videoStates[media.id]?.isMuted}
                     loop
                     playsInline

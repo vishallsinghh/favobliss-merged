@@ -90,16 +90,18 @@ const LatestLaunches = async ({ params, searchParams }: CategoryPageProps) => {
     brandId: searchParams.brandId,
     rating: searchParams.rating,
     discount: searchParams.discount,
-    isNewArrival: true, // Filter for new arrivals
+    isNewArrival: true,
   };
-  const { products, totalCount } = await withRetry(() => getProducts(query));
 
-  const sizes = await withRetry(() => getSizes());
-  const colors = await withRetry(() => getColors());
-  const brands = await withRetry(() => getBrands());
-  const locationGroups = await withRetry(() =>
-    getLocationGroups(params.storeId)
-  );
+  // Fetch data in parallel
+  const [{ products, totalCount }, sizes, colors, brands, locationGroups] =
+    await Promise.all([
+      withRetry(() => getProducts(query)),
+      withRetry(() => getSizes()),
+      withRetry(() => getColors()),
+      withRetry(() => getBrands()),
+      withRetry(() => getLocationGroups(params.storeId)),
+    ]);
 
   const sizeMap: { [key: string]: string[] } = {
     TOPWEAR: ["S", "M", "L", "XL", "XXL"],
@@ -113,7 +115,6 @@ const LatestLaunches = async ({ params, searchParams }: CategoryPageProps) => {
     TELEVISION: [],
   };
 
-  // Use first product's category classification or default to TOPWEAR
   const classification = products[0]?.category?.classification || "TOPWEAR";
   const validSizes = sizeMap[classification] || [];
   const filteredSizes = sizes.filter((size) => validSizes.includes(size.name));

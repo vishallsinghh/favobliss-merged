@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { Urbanist } from "next/font/google";
-import { Roboto } from "next/font/google";
 import "../globals.css";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
@@ -12,13 +10,6 @@ import Script from "next/script";
 import "react-loading-skeleton/dist/skeleton.css";
 import WhatsAppButton from "@/components/store/WhatsAppButton";
 import { getCategories } from "@/actions/get-categories";
-
-const inter = Urbanist({ subsets: ["latin"] });
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Favobliss – Your One-Stop Shop for the Latest Electronics",
@@ -36,9 +27,6 @@ export default async function RootLayout({
 }>) {
   const data = await getCategories();
   return (
-    // <html lang="en">
-    //   <link rel="icon" href="/assets/favicon.ico" sizes="any" />
-    // <body className={roboto.className}>
     <div>
       <ModalProvider />
       <FlowbiteProvider />

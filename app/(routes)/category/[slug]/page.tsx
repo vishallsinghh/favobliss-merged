@@ -56,16 +56,16 @@ export async function generateMetadata(
   { params, searchParams }: CategoryPageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  // Fetch data with retry
-  const category = await withRetry(() => getCategoryBySlug(params.slug));
-  const subCategory = searchParams.sub
-    ? await withRetry(() => getSubCategoryBySlug(searchParams.sub as string))
-    : null;
-  const childSubCategory = searchParams.childsub
-    ? await withRetry(() =>
-        getSubCategoryBySlug(searchParams.childsub as string)
-      )
-    : null;
+  // Fetch data in parallel with retry
+  const [category, subCategory, childSubCategory] = await Promise.all([
+    withRetry(() => getCategoryBySlug(params.slug)),
+    searchParams.sub
+      ? withRetry(() => getSubCategoryBySlug(searchParams.sub as string))
+      : Promise.resolve(null),
+    searchParams.childsub
+      ? withRetry(() => getSubCategoryBySlug(searchParams.childsub as string))
+      : Promise.resolve(null),
+  ]);
 
   const previousImages = (await parent).openGraph?.images || [];
 
@@ -100,9 +100,10 @@ export async function generateMetadata(
 }
 
 const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
-  // Fetch data with retry
-  const category = await withRetry(() => getCategoryBySlug(params.slug));
   const page = searchParams.page || "1";
+
+  // Fetch category first (required for early return and products)
+  const category = await withRetry(() => getCategoryBySlug(params.slug));
 
   if (!category) {
     return (
@@ -116,41 +117,43 @@ const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
     );
   }
 
-  const subCategory = searchParams.sub
-    ? await withRetry(() => getSubCategoryBySlug(searchParams.sub as string))
-    : null;
-
-  const childSubCategory = searchParams.childsub
-    ? await withRetry(() =>
-        getSubCategoryBySlug(searchParams.childsub as string)
-      )
-    : null;
+  // Fetch subCategory and childSubCategory in parallel
+  const [subCategory, childSubCategory] = await Promise.all([
+    searchParams.sub
+      ? withRetry(() => getSubCategoryBySlug(searchParams.sub as string))
+      : Promise.resolve(null),
+    searchParams.childsub
+      ? withRetry(() => getSubCategoryBySlug(searchParams.childsub as string))
+      : Promise.resolve(null),
+  ]);
 
   // Determine current entity based on priority
   const currentEntity = childSubCategory || subCategory || category;
   const subCategoryId = childSubCategory?.id || subCategory?.id || undefined;
 
-  // Fetch products with retry
-  const { products, totalCount } = await withRetry(() =>
-    getProducts({
-      type: searchParams.category,
-      categoryId: category.id,
-      subCategoryId,
-      colorId: searchParams.colorId,
-      sizeId: searchParams.sizeId,
-      page,
-      price: searchParams.price,
-      limit: "12",
-      brandId: searchParams.brandId,
-      rating: searchParams.rating,
-      discount: searchParams.discount,
-    })
-  );
-
-  const sizes = await withRetry(() => getSizes());
-  const colors = await withRetry(() => getColors());
-  const locationGroups = await withRetry(() => getLocationGroups());
-  const brands = await withRetry(() => getBrands());
+  // Fetch products and static data in parallel
+  const [{ products, totalCount }, sizes, colors, locationGroups, brands] =
+    await Promise.all([
+      withRetry(() =>
+        getProducts({
+          type: searchParams.category,
+          categoryId: category.id,
+          subCategoryId,
+          colorId: searchParams.colorId,
+          sizeId: searchParams.sizeId,
+          page,
+          price: searchParams.price,
+          limit: "12",
+          brandId: searchParams.brandId,
+          rating: searchParams.rating,
+          discount: searchParams.discount,
+        })
+      ),
+      withRetry(() => getSizes()),
+      withRetry(() => getColors()),
+      withRetry(() => getLocationGroups()),
+      withRetry(() => getBrands()),
+    ]);
 
   const sizeMap: { [key: string]: string[] } = {
     TOPWEAR: ["S", "M", "L", "XL", "XXL"],
