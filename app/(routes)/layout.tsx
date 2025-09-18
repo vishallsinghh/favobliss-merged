@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import "../globals.css";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { ModalProvider } from "@/providers/modal-provider";
@@ -10,6 +9,9 @@ import Script from "next/script";
 import "react-loading-skeleton/dist/skeleton.css";
 import WhatsAppButton from "@/components/store/WhatsAppButton";
 import { getCategories } from "@/actions/get-categories";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: "Favobliss – Your One-Stop Shop for the Latest Electronics",

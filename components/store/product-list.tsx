@@ -34,7 +34,7 @@ export const ProductList = ({
             {title}
           </h3>
           {showViewAll && (
-            <Link href={link} className="text-gray-500 text-sm">
+            <Link href={link} className="text-gray-500 text-sm hover:underline">
               View All
             </Link>
           )}
