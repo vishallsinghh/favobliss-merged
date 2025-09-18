@@ -2,15 +2,9 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { useRouter } from "next/navigation";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Mousewheel } from "swiper/modules";
 
 const defaultCategoryImages = {
   "air conditioners": "/assets/category/air-conditioner.png",
@@ -60,40 +54,28 @@ export function CategorySlider(props: Props) {
     return "/assets/category/air-conditioner.png";
   };
 
-  // Mobile/Tablet Grid Layout
-  const MobileGridLayout = () => (
+  // Mobile/Tablet Swiper Layout
+  const MobileSwiperLayout = () => (
     <div className="block md:hidden w-full bg-white py-5 md:py-8 pb-0">
       <div className="px-4">
-        <div
-          className="grid grid-rows-2 gap-y-4 overflow-x-auto pb-4"
-          style={{
-            gridTemplateColumns: "repeat(11, minmax(100px, 1fr))", // Adjusted for 3.5 categories per row
-            width: "calc(100vw - 2rem)",
-            scrollBehavior: "smooth",
-            WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
+        <Swiper
+          className="w-full"
+          modules={[FreeMode, Mousewheel]}
+          freeMode={true}
+          mousewheel={true}
+          slidesPerView="auto"
+          spaceBetween={2}
+          grabCursor={true}
         >
-          {categories.map((category, index) => {
-            const imageSrc = getImageSrc(category);
-            const isFirstRow = index < Math.ceil(categories.length / 2);
-
-            return (
+          {categories.map((category) => (
+            <SwiperSlide key={category.id} className="flex-shrink-0 w-[100px]">
               <div
-                key={category.id}
                 className="group cursor-pointer flex flex-col items-center"
                 onClick={() => handleCategoryClick(category.slug)}
-                style={{
-                  gridRow: isFirstRow ? 1 : 2,
-                  gridColumn: isFirstRow
-                    ? index + 1
-                    : index - Math.ceil(categories.length / 2) + 1,
-                }}
               >
                 <div className="relative w-20 h-20 sm:w-20 sm:h-20 mx-auto mb-2 overflow-hidden transition-all duration-300 bg-gray-50 rounded-lg">
                   <Image
-                    src={imageSrc}
+                    src={getImageSrc(category)}
                     alt={category.name}
                     fill
                     className="object-cover p-1 group-hover:opacity-90 transition-opacity duration-300"
@@ -105,70 +87,58 @@ export function CategorySlider(props: Props) {
                   />
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </div>
   );
 
-  const DesktopCarouselLayout = () => (
-    <div className="hidden md:block w-full bg-white py-8">
-      <Carousel
-        opts={{
-          align: "start",
-          loop: false,
-          dragFree: true,
-        }}
-        className="w-full max-w-7xl mx-auto px-4"
+  // Desktop Swiper Layout
+  const DesktopSwiperLayout = () => (
+    <div className="hidden md:block w-full bg-white py-8 max-w-7xl mx-auto">
+      <Swiper
+        className="w-full px-4"
+        modules={[FreeMode, Mousewheel]}
+        freeMode={true}
+        mousewheel={true}
+        slidesPerView="auto"
+        spaceBetween={1}
+        grabCursor={true}
       >
-        <CarouselContent
-          className="-ml-1 justify-between overflow-x-auto touch-auto"
-          style={{
-            scrollBehavior: "smooth",
-            WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
-        >
-          {categories.map((category, index) => {
-            const imageSrc = getImageSrc(category);
-
-            return (
-              <CarouselItem
-                key={category.id}
-                className="pl-1 basis-1/4 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-[12.5%] 2xl:basis-[10%]"
-              >
-                <div
-                  className="group cursor-pointer"
-                  onClick={() => handleCategoryClick(category.slug)}
-                >
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 mx-auto mb-3 overflow-hidden transition-all duration-300">
-                    <Image
-                      src={imageSrc}
-                      alt={category.name}
-                      fill
-                      className="object-cover p-2 group-hover:opacity-90 transition-opacity duration-300"
-                      sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, 96px"
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          "/assets/category/air-conditioner.png";
-                      }}
-                    />
-                  </div>
-                </div>
-              </CarouselItem>
-            );
-          })}
-        </CarouselContent>
-      </Carousel>
+        {categories.map((category) => (
+          <SwiperSlide
+            key={category.id}
+            className="flex-shrink-0 w-[12.5%] min-w-[120px] max-w-[160px]"
+          >
+            <div
+              className="group cursor-pointer"
+              onClick={() => handleCategoryClick(category.slug)}
+            >
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 mx-auto mb-3 overflow-hidden transition-all duration-300">
+                <Image
+                  src={getImageSrc(category)}
+                  alt={category.name}
+                  fill
+                  className="object-cover p-2 group-hover:opacity-90 transition-opacity duration-300"
+                  sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, 96px"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "/assets/category/air-conditioner.png";
+                  }}
+                />
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 
   return (
     <>
-      <MobileGridLayout />
-      <DesktopCarouselLayout />
+      <MobileSwiperLayout />
+      <DesktopSwiperLayout />
     </>
   );
 }

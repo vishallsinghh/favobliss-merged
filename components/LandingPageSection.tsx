@@ -35,7 +35,7 @@ const LandingPageSection: React.FC<HomeAppliancesSectionProps> = ({
           {viewAllLink && (
             <Link
               href={viewAllLink}
-              className="text-sm md:text-sm text-gray-600 hover:text-gray-800 transition-colors"
+              className="text-sm md:text-sm text-gray-600 hover:text-gray-800 transition-colors hover:underline"
             >
               View All
             </Link>
@@ -80,7 +80,7 @@ const ApplianceCard: React.FC<ApplianceCardProps> = React.memo(
             />
           </div>
 
-          <h3 className="text-sm font-medium text-gray-900 text-center group-hover:text-blue-600 transition-colors">
+          <h3 className="text-sm font-medium text-gray-900 text-center group-hover:text-orange-500 transition-colors">
             {item.title}
           </h3>
         </div>
