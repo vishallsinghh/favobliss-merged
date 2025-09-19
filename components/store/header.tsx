@@ -333,9 +333,9 @@ export default function DynamicHeader({ categories }: DynamicHeaderProps) {
 
   const menuCategories = transformCategoriesToMenuCategories(categories);
 
-  if (isMobile) {
-    return null;
-  }
+  // if (isMobile) {
+  //   return null;
+  // }
 
   const getRightAlignedCategories = (categories: MenuCategory[]) => {
     if (categories.length >= 2) {
@@ -410,7 +410,7 @@ export default function DynamicHeader({ categories }: DynamicHeaderProps) {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white hidden md:block">
       <div className="max-x-full px-4 md:px-6 m-auto pt-[18px] pb-[4px]">
         <header className="bg-black text-white py-2 px-6 flex items-center justify-between shadow-md border border-transparent rounded-2xl">
           <div className="flex items-center space-x-4">

@@ -275,7 +275,7 @@ const HeroSlider: React.FC = () => {
                   alt={slide.alt}
                   width={slide.width}
                   height={slide.height}
-                  className="w-full h-full object-cover object-center rounded-2xl"
+                  className="w-full h-full object-fill object-center rounded-2xl"
                   priority={slide.priority || false}
                   loading={slide.id === 1 ? "eager" : "lazy"}
                   // Next.js Image auto-handles responsive sizes; if you need custom srcSet, use sizes="100vw" or configure in next.config.js

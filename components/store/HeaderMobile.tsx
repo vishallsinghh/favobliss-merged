@@ -148,9 +148,9 @@ export default function HeaderMobile({ categories }: HeaderMobileProps) {
     router.push(href);
   };
 
-  if (!isMobile) {
-    return null;
-  }
+  // if (!isMobile) {
+  //   return null;
+  // }
 
   const transformCategoriesToMenuCategories = (
     apiCategories: any[]
@@ -246,7 +246,7 @@ export default function HeaderMobile({ categories }: HeaderMobileProps) {
   };
 
   return (
-    <header className="bg-black text-white py-4 px-4 shadow-md border border-transparent rounded-2xl">
+    <header className="bg-black text-white py-4 px-4 shadow-md border border-transparent rounded-2xl block md:hidden">
       {/* Top Row: Menu Icon, Logo, Profile, Cart */}
       <div className="flex items-center justify-between">
         {/* Left: Menu Icon and Logo */}
