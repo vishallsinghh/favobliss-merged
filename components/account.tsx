@@ -41,7 +41,9 @@ export const Account = () => {
 
   const isAuthenticated = status === "authenticated";
   const userName = isAuthenticated ? session?.user?.name || "User" : "Account";
-  const isAdmin = session?.user?.email === "piyushthakur241199@gmail.com";
+  const isAdmin =
+    session?.user?.email === "piyushthakur241199@gmail.com" ||
+    session?.user?.email === "favoblis@gmail.com";
 
   return (
     <DropdownMenu>

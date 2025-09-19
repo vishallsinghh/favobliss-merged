@@ -21,7 +21,8 @@ const DashboardLayoutPage = async ({
   if (
     !session ||
     !userId ||
-    session.user?.email !== "piyushthakur241199@gmail.com"
+    (session.user?.email !== "piyushthakur241199@gmail.com" &&
+      session.user?.email !== "favoblis@gmail.com")
   ) {
     redirect("/");
   }
