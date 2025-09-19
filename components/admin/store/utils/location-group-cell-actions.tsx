@@ -36,7 +36,7 @@ export const LocationGroupCellActions = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/admin/${params.storeId}/location-group/${data.id}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/location-group/${data.id}`
       );
       router.refresh();
       toast.success("Location Group deleted");

@@ -33,7 +33,7 @@ export const LocationCellActions = ({ data }: LocationCellActionsProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/admin/${params.storeId}/location/${data.id}`);
+      await axios.delete(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/location/${data.id}`);
       router.refresh();
       toast.success("Location deleted");
     } catch (error) {

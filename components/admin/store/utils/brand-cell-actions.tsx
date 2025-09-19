@@ -33,7 +33,7 @@ export const BrandCellActions = ({ data }: BrandCellActionsProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/admin/${params.storeId}/brands/${data.id}`);
+      await axios.delete(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/brands/${data.id}`);
       router.refresh();
       toast.success("Brand deleted");
     } catch (error) {

@@ -33,7 +33,7 @@ export const ReviewCellActions = ({ data }: CellActionsProps) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/admin/${params.storeId}/products/${data.productId}/reviews/${data.id}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/products/${data.productId}/reviews/${data.id}`
       );
       router.refresh();
       toast.success("Review deleted");

@@ -63,14 +63,17 @@ export const LocationForm = ({ data }: LocationFormProps) => {
 
       if (data) {
         await axios.patch(
-          `/api/${params.storeId}/location/${params.locationId}`,
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location/${params.locationId}`,
           values
         );
       } else {
-        await axios.post(`/api/${params.storeId}/location`, values);
+        await axios.post(
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location`,
+          values
+        );
       }
       router.refresh();
-      router.push(`/${params.storeId}/location`);
+      router.push(`/admin/location`);
       router.refresh();
       toast.success(toastMessage);
     } catch (error) {
@@ -85,10 +88,10 @@ export const LocationForm = ({ data }: LocationFormProps) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/location/${params.locationId}`
+        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location/${params.locationId}`
       );
       router.refresh();
-      router.push(`/${params.storeId}/location`);
+      router.push(`/admin/location`);
       router.refresh();
       toast.success("Location deleted");
     } catch (error) {

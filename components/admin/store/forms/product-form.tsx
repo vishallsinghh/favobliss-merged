@@ -14,7 +14,12 @@ import {
   VariantImage,
   LocationGroup,
 } from "@prisma/client";
-import { useForm, FieldError, useFormContext, useFieldArray } from "react-hook-form";
+import {
+  useForm,
+  FieldError,
+  useFormContext,
+  useFieldArray,
+} from "react-hook-form";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -213,14 +218,17 @@ export const ProductForm = ({
 
       if (data) {
         await axios.patch(
-          `/api/${params.storeId}/products/${params.productId}`,
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/products/${params.productId}`,
           submitValues
         );
       } else {
-        await axios.post(`/api/${params.storeId}/products`, submitValues);
+        await axios.post(
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/products`,
+          submitValues
+        );
       }
       router.refresh();
-      router.push(`/${params.storeId}/products`);
+      router.push(`/admin/products`);
       router.refresh();
       toast.success(toastMessage);
     } catch (error: any) {
@@ -243,9 +251,11 @@ export const ProductForm = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
+      await axios.delete(
+        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/products/${params.productId}`
+      );
       router.refresh();
-      router.push(`/${params.storeId}/products`);
+      router.push(`/admin/products`);
       router.refresh();
       toast.success("Product deleted");
     } catch (error) {

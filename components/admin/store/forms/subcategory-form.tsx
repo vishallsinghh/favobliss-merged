@@ -125,14 +125,17 @@ export const SubCategoryForm = ({
 
       if (initialData) {
         await axios.patch(
-          `/api/${params.storeId}/subcategories/${params.subCategoryId}`,
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/subcategories/${params.subCategoryId}`,
           submitValues
         );
       } else {
-        await axios.post(`/api/${params.storeId}/subcategories`, submitValues);
+        await axios.post(
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/subcategories`,
+          submitValues
+        );
       }
       router.refresh();
-      router.push(`/${params.storeId}/subcategories`);
+      router.push(`/admin/subcategories`);
       toast.success(toastMessage);
     } catch (error: any) {
       console.log("[SUBCATEGORY_FORM]", error);
@@ -156,10 +159,10 @@ export const SubCategoryForm = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/subcategories/${params.subCategoryId}`
+        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/subcategories/${params.subCategoryId}`
       );
       router.refresh();
-      router.push(`/${params.storeId}/subcategories`);
+      router.push(`/admin/subcategories`);
       toast.success("Subcategory deleted.");
     } catch (error) {
       console.log("[SUBCATEGORY_DELETE]", error);

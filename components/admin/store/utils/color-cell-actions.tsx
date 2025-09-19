@@ -34,7 +34,7 @@ export const ColorCellActions = ({ data }: ColorCellActionsProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/admin/${params.storeId}/colors/${data.id}`);
+      await axios.delete(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/colors/${data.id}`);
       router.refresh();
       toast.success("Color deleted");
     } catch (error) {

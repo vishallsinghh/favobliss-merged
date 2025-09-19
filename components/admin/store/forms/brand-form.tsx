@@ -60,14 +60,17 @@ export const BrandForm = ({ data }: BrandFormProps) => {
 
       if (data) {
         await axios.patch(
-          `/api/${params.storeId}/brands/${params.brandId}`,
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/brands/${params.brandId}`,
           values
         );
       } else {
-        await axios.post(`/api/${params.storeId}/brands`, values);
+        await axios.post(
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/brands`,
+          values
+        );
       }
       router.refresh();
-      router.push(`/${params.storeId}/brands`);
+      router.push(`/admin/brands`);
       router.refresh();
       toast.success(toastMessage);
     } catch (error) {
@@ -81,9 +84,11 @@ export const BrandForm = ({ data }: BrandFormProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/brands/${params.brandId}`);
+      await axios.delete(
+        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/brands/${params.brandId}`
+      );
       router.refresh();
-      router.push(`/${params.storeId}/brands`);
+      router.push(`/admin/brands`);
       router.refresh();
       toast.success("Brand deleted");
     } catch (error) {

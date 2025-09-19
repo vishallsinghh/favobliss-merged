@@ -98,7 +98,7 @@ export const SpecificationGroupClient = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/admin/${params.storeId}/specification-groups/${selectedId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/specification-groups/${selectedId}`
       );
       router.refresh();
       toast.success("Specification group deleted");

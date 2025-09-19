@@ -69,14 +69,14 @@ export const SpecificationGroupForm = ({
 
       if (data) {
         await axios.patch(
-          `/api/${params.storeId}/specification-groups/${params.groupId}`,
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-groups/${params.groupId}`,
           values
         );
       } else {
-        await axios.post(`/api/${params.storeId}/specification-groups`, values);
+        await axios.post(`/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-groups`, values);
       }
       router.refresh();
-      router.push(`/${params.storeId}/specification-groups`);
+      router.push(`/admin/specification-groups`);
       router.refresh();
       toast.success(toastMessage);
     } catch (error) {
@@ -91,10 +91,10 @@ export const SpecificationGroupForm = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/specification-groups/${params.groupId}`
+        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-groups/${params.groupId}`
       );
       router.refresh();
-      router.push(`/${params.storeId}/specification-groups`);
+      router.push(`/admin/specification-groups`);
       router.refresh();
       toast.success("Specification group deleted");
     } catch (error) {

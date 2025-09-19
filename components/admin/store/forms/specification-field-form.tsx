@@ -82,14 +82,17 @@ export const SpecificationFieldForm = ({
 
       if (data) {
         await axios.patch(
-          `/api/${params.storeId}/specification-fields/${params.fieldId}`,
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-fields/${params.fieldId}`,
           values
         );
       } else {
-        await axios.post(`/api/${params.storeId}/specification-fields`, values);
+        await axios.post(
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-fields`,
+          values
+        );
       }
       router.refresh();
-      router.push(`/${params.storeId}/specification-fields`);
+      router.push(`/admin/specification-fields`);
       router.refresh();
       toast.success(toastMessage);
     } catch (error) {
@@ -104,10 +107,10 @@ export const SpecificationFieldForm = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/specification-fields/${params.fieldId}`
+        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-fields/${params.fieldId}`
       );
       router.refresh();
-      router.push(`/${params.storeId}/specification-fields`);
+      router.push(`/admin/specification-fields`);
       router.refresh();
       toast.success("Specification field deleted");
     } catch (error) {

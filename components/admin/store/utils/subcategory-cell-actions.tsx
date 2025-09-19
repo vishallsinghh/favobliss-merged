@@ -36,7 +36,7 @@ export const SubCategoryCellActions = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/admin/${params.storeId}/subcategories/${data.id}`);
+      await axios.delete(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/subcategories/${data.id}`);
       router.refresh();
       toast.success("Subcategory deleted");
     } catch (error) {

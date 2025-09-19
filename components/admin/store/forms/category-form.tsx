@@ -66,14 +66,17 @@ export const CategoryForm = ({ data }: CategoryFormProps) => {
       setLoading(true);
       if (data) {
         await axios.patch(
-          `/api/${params.storeId}/categories/${params.categoryId}`,
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/categories/${params.categoryId}`,
           values
         );
       } else {
-        await axios.post(`/api/${params.storeId}/categories`, values);
+        await axios.post(
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/categories`,
+          values
+        );
       }
       router.refresh();
-      router.push(`/${params.storeId}/categories`);
+      router.push(`/admin/categories`);
       toast.success(toastMessage);
     } catch (error: any) {
       console.error("[CATEGORY_FORM] Error:", error);
@@ -97,10 +100,10 @@ export const CategoryForm = ({ data }: CategoryFormProps) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/categories/${params.categoryId}`
+        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/categories/${params.categoryId}`
       );
       router.refresh();
-      router.push(`/${params.storeId}/categories`);
+      router.push(`/admin/categories`);
       toast.success("Category deleted");
     } catch (error) {
       console.error("[CATEGORY_FORM] Error:", error);

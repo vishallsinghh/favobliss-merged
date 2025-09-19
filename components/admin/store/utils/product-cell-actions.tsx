@@ -33,7 +33,7 @@ export const ProductCellActions = ({ data }: CellActionsProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/admin/${params.storeId}/products/${data.id}`);
+      await axios.delete(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/products/${data.id}`);
       router.refresh();
       toast.success("Product deleted");
     } catch (error) {

@@ -91,14 +91,17 @@ export const LocationGroupForm = ({
 
       if (data) {
         await axios.patch(
-          `/api/${params.storeId}/location-group/${params.locationGroupId}`,
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location-group/${params.locationGroupId}`,
           values
         );
       } else {
-        await axios.post(`/api/${params.storeId}/location-group`, values);
+        await axios.post(
+          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location-group`,
+          values
+        );
       }
       router.refresh();
-      router.push(`/${params.storeId}/location-group`);
+      router.push(`/admin/location-group`);
       router.refresh();
       toast.success(toastMessage);
     } catch (error) {
@@ -113,10 +116,10 @@ export const LocationGroupForm = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/location-group/${params.locationGroupId}`
+        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location-group/${params.locationGroupId}`
       );
       router.refresh();
-      router.push(`/${params.storeId}/location-group`);
+      router.push(`/admin/location-group`);
       router.refresh();
       toast.success("Location Group deleted");
     } catch (error) {

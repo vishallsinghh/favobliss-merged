@@ -26,7 +26,7 @@ export const OrderCellActions = ({ data }: OrderCellActionsProps) => {
   const handleStatusUpdate = async (newStatus: string) => {
     setLoading(true);
     try {
-      await axios.patch(`/api/admin/${params.storeId}/orders/${data.id}`, {
+      await axios.patch(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/orders/${data.id}`, {
         status: newStatus,
       });
       toast.success(`Order status updated to ${newStatus}`);

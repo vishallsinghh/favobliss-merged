@@ -34,7 +34,7 @@ export const CategoryCellActions = ({ data }: CategoryCellActionsProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/admin/${params.storeId}/categories/${data.id}`);
+      await axios.delete(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/categories/${data.id}`);
       router.refresh();
       toast.success("Category deleted");
     } catch (error) {

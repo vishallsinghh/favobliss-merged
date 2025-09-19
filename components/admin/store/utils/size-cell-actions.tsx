@@ -34,7 +34,7 @@ export const SizeCellActions = ({ data }: SizeCellActionsProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/admin/${params.storeId}/sizes/${data.id}`);
+      await axios.delete(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/sizes/${data.id}`);
       router.refresh();
       toast.success("Size deleted");
     } catch (error) {
