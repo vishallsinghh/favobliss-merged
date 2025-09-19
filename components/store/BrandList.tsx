@@ -43,7 +43,7 @@ const BrandList = ({ brands }: Props) => {
           {brands.map((item) => (
             <SwiperSlide
               key={item.id}
-              className="flex-shrink-0 w-[13.33%] min-w-[120px] max-w-[160px]"
+              className="flex-shrink-0 w-[13.33%] min-w-[60px] max-w-[80px] md:min-w-[120px] md:max-w-[160px]"
             >
               <div className="flex flex-col items-center space-y-2">
                 <div
