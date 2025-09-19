@@ -73,7 +73,7 @@ export const ProductCellActions = ({ data }: CellActionsProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() =>
-              router.push(`/admins/products/${data.id}`)
+              router.push(`/admin/products/${data.id}`)
             }
           >
             <Edit className="h-4 w-4 mr-4" />
