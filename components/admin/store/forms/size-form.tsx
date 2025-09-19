@@ -55,12 +55,12 @@ export const SizeForm = ({ data }: SizeFormProps) => {
 
       if (data) {
         await axios.patch(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/sizes/${params.sizeId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/sizes/${params.sizeId}`,
           values
         );
       } else {
         await axios.post(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/sizes`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/sizes`,
           values
         );
       }
@@ -80,7 +80,7 @@ export const SizeForm = ({ data }: SizeFormProps) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/sizes/${params.sizeId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/sizes/${params.sizeId}`
       );
       router.refresh();
       router.push(`/admin/sizes`);

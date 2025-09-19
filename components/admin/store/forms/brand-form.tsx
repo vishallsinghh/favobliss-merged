@@ -60,12 +60,12 @@ export const BrandForm = ({ data }: BrandFormProps) => {
 
       if (data) {
         await axios.patch(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/brands/${params.brandId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/brands/${params.brandId}`,
           values
         );
       } else {
         await axios.post(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/brands`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/brands`,
           values
         );
       }
@@ -85,7 +85,7 @@ export const BrandForm = ({ data }: BrandFormProps) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/brands/${params.brandId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/brands/${params.brandId}`
       );
       router.refresh();
       router.push(`/admin/brands`);

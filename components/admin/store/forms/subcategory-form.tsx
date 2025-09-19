@@ -125,12 +125,12 @@ export const SubCategoryForm = ({
 
       if (initialData) {
         await axios.patch(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/subcategories/${params.subCategoryId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/subcategories/${params.subCategoryId}`,
           submitValues
         );
       } else {
         await axios.post(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/subcategories`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/subcategories`,
           submitValues
         );
       }
@@ -159,7 +159,7 @@ export const SubCategoryForm = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/subcategories/${params.subCategoryId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/subcategories/${params.subCategoryId}`
       );
       router.refresh();
       router.push(`/admin/subcategories`);

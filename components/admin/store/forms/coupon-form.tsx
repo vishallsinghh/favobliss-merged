@@ -96,14 +96,14 @@ export const CouponForm = ({ data, products }: CouponFormProps) => {
       setLoading(true);
       if (data) {
         await axios.patch(
-          `/api/${params.storeId}/coupons/${params.couponId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/coupons/${params.couponId}`,
           values
         );
       } else {
-        await axios.post(`/api/${params.storeId}/coupons`, values);
+        await axios.post(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/coupons`, values);
       }
       router.refresh();
-      router.push(`/${params.storeId}/coupons`);
+      router.push(`/admin/coupons`);
       toast.success(toastMessage);
     } catch (error) {
       console.log(error);
@@ -116,9 +116,9 @@ export const CouponForm = ({ data, products }: CouponFormProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/coupons/${params.couponId}`);
+      await axios.delete(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/coupons/${params.couponId}`);
       router.refresh();
-      router.push(`/${params.storeId}/coupons`);
+      router.push(`/admin/coupons`);
       toast.success("Coupon deleted");
     } catch (error) {
       console.error(error);

@@ -91,12 +91,12 @@ export const LocationGroupForm = ({
 
       if (data) {
         await axios.patch(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location-group/${params.locationGroupId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/location-group/${params.locationGroupId}`,
           values
         );
       } else {
         await axios.post(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location-group`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/location-group`,
           values
         );
       }
@@ -116,7 +116,7 @@ export const LocationGroupForm = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location-group/${params.locationGroupId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/location-group/${params.locationGroupId}`
       );
       router.refresh();
       router.push(`/admin/location-group`);

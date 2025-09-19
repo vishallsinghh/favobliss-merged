@@ -82,12 +82,12 @@ export const SpecificationFieldForm = ({
 
       if (data) {
         await axios.patch(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-fields/${params.fieldId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/specification-fields/${params.fieldId}`,
           values
         );
       } else {
         await axios.post(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-fields`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/specification-fields`,
           values
         );
       }
@@ -107,7 +107,7 @@ export const SpecificationFieldForm = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-fields/${params.fieldId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/specification-fields/${params.fieldId}`
       );
       router.refresh();
       router.push(`/admin/specification-fields`);

@@ -66,12 +66,12 @@ export const CategoryForm = ({ data }: CategoryFormProps) => {
       setLoading(true);
       if (data) {
         await axios.patch(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/categories/${params.categoryId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/categories/${params.categoryId}`,
           values
         );
       } else {
         await axios.post(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/categories`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/categories`,
           values
         );
       }
@@ -100,7 +100,7 @@ export const CategoryForm = ({ data }: CategoryFormProps) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/categories/${params.categoryId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/categories/${params.categoryId}`
       );
       router.refresh();
       router.push(`/admin/categories`);

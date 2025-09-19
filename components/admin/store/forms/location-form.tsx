@@ -63,12 +63,12 @@ export const LocationForm = ({ data }: LocationFormProps) => {
 
       if (data) {
         await axios.patch(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location/${params.locationId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/location/${params.locationId}`,
           values
         );
       } else {
         await axios.post(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/location`,
           values
         );
       }
@@ -88,7 +88,7 @@ export const LocationForm = ({ data }: LocationFormProps) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/location/${params.locationId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/location/${params.locationId}`
       );
       router.refresh();
       router.push(`/admin/location`);

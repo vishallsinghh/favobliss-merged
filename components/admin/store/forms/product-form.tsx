@@ -218,12 +218,12 @@ export const ProductForm = ({
 
       if (data) {
         await axios.patch(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/products/${params.productId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/products/${params.productId}`,
           submitValues
         );
       } else {
         await axios.post(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/products`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/products`,
           submitValues
         );
       }
@@ -252,7 +252,7 @@ export const ProductForm = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/products/${params.productId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/products/${params.productId}`
       );
       router.refresh();
       router.push(`/admin/products`);

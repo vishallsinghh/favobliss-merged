@@ -115,12 +115,12 @@ export const SubNav = ({
       //   active: pathname === `/admin/billboards`,
       //   icon: Monitor,
       // },
-      {
-        href: `/admin/settings`,
-        label: "Settings",
-        active: pathname === `/admin/settings`,
-        icon: Settings,
-      },
+      // {
+      //   href: `/admin/settings`,
+      //   label: "Settings",
+      //   active: pathname === `/admin/settings`,
+      //   icon: Settings,
+      // },
     ],
     [pathname, params]
   );

@@ -54,12 +54,12 @@ export const ColorForm = ({ data }: ColorFormProps) => {
 
       if (data) {
         await axios.patch(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/colors/${params.colorId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/colors/${params.colorId}`,
           values
         );
       } else {
         await axios.post(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/colors`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/colors`,
           values
         );
       }
@@ -79,7 +79,7 @@ export const ColorForm = ({ data }: ColorFormProps) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/colors/${params.colorId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/colors/${params.colorId}`
       );
       router.refresh();
       router.push(`/admin/colors`);

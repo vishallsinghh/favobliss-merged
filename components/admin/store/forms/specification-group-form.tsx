@@ -69,11 +69,11 @@ export const SpecificationGroupForm = ({
 
       if (data) {
         await axios.patch(
-          `/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-groups/${params.groupId}`,
+          `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/specification-groups/${params.groupId}`,
           values
         );
       } else {
-        await axios.post(`/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-groups`, values);
+        await axios.post(`/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/specification-groups`, values);
       }
       router.refresh();
       router.push(`/admin/specification-groups`);
@@ -91,7 +91,7 @@ export const SpecificationGroupForm = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${process.env.NEXT_PUBLIC_STORE_ID}/specification-groups/${params.groupId}`
+        `/api/admin/${process.env.NEXT_PUBLIC_STORE_ID}/specification-groups/${params.groupId}`
       );
       router.refresh();
       router.push(`/admin/specification-groups`);
