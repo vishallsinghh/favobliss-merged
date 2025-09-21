@@ -241,7 +241,7 @@ export const ProductForm = ({
           "Slug, SKU, or HSN already exists. Please choose different values."
         );
       } else {
-        toast.error("Internal server error");
+        toast.error(error?.response?.data || "Internal server error");
       }
     } finally {
       setLoading(false);

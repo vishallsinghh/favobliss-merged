@@ -14,7 +14,7 @@ interface Props {
 
 const CategoryButtons = ({ categories, categoryChange }: Props) => {
   return (
-    <div className="w-full max-w-7xl mx-auto">
+    <div className="w-full max-w-7xl ml-[10px]">
       <Swiper
         className="w-full"
         modules={[FreeMode, Mousewheel]}
@@ -31,7 +31,7 @@ const CategoryButtons = ({ categories, categoryChange }: Props) => {
         {categories.map((category, index) => (
           <SwiperSlide
             key={index}
-            className="flex-shrink-0 w-auto min-w-fit max-w-[180px]"
+            className="flex-shrink-0 w-auto min-w-fit max-w-fit md:max-w-[180px]"
           >
             <button
               className="bg-white rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-2 text-gray-800 font-medium hover:bg-gray-100 transition-colors duration-200 shadow-sm border border-gray-200 text-sm sm:text-base truncate w-full"

@@ -6,6 +6,7 @@ import { ProductList } from "./product-list";
 import { getProducts } from "@/actions/get-products";
 import { ProductSkeleton } from "./product-skeleton";
 import CategoryButtons from "./CategoryButtons";
+import PromtionalBannerProducts from "./PromotionalBannerProducts";
 
 interface Props {
   data: Product[];
@@ -58,7 +59,10 @@ const PromotionalBanner = (props: Props) => {
                 </button>
               ))}
             </div> */}
-            <CategoryButtons categories={categories} categoryChange={categoryChange}/>
+            <CategoryButtons
+              categories={categories}
+              categoryChange={categoryChange}
+            />
           </div>
 
           {loading ? (
@@ -69,13 +73,17 @@ const PromotionalBanner = (props: Props) => {
               <ProductSkeleton className="w-[160px] sm:w-[unset] flex-shrink-0 h-[270px]" />
             </div>
           ) : (
-            <ProductList
-              title=""
-              data={product}
+            // <ProductList
+            //   title=""
+            //   data={product}
+            //   locationGroups={locationGroups}
+            //   isBannerProduct={true}
+            //   isSpaceTop={false}
+            //   className="md:min-w-[260px]"
+            // />
+            <PromtionalBannerProducts
+              products={product}
               locationGroups={locationGroups}
-              isBannerProduct={true}
-              isSpaceTop={false}
-              className="md:min-w-[260px]"
             />
           )}
         </div>
