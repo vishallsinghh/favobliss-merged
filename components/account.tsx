@@ -15,6 +15,7 @@ import { MdLogin, MdPersonAdd } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 export const Account = () => {
   const router = useRouter();
@@ -56,13 +57,16 @@ export const Account = () => {
         {isAuthenticated ? (
           <>
             {isAdmin && (
-              <DropdownMenuItem
-                className="flex items-center text-zinc-700 font-semibold md:cursor-pointer"
-                onClick={() => router.push("/admin")}
+              <Link
+                href="/admin/dashboard"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Store className="mr-3 h-4 w-4" />
-                Admin Dashboard
-              </DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center text-zinc-700 font-semibold md:cursor-pointer">
+                  <Store className="mr-3 h-4 w-4" />
+                  Admin Dashboard
+                </DropdownMenuItem>
+              </Link>
             )}
             <DropdownMenuItem
               className="flex items-center text-zinc-700 font-semibold md:cursor-pointer"

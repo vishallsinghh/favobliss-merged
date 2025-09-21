@@ -26,7 +26,10 @@ export async function PATCH(
 
     if (action === "cancel") {
       if (order.isCompleted || order.status !== "PENDING") {
-        return new NextResponse("Order cannot be canceled", { status: 400 });
+        return new NextResponse(
+          `As Order status is now ${order.status} so order can't be canceled now!`,
+          { status: 400 }
+        );
       }
 
       await db.$transaction(async (tx) => {

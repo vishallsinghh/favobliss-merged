@@ -260,7 +260,9 @@ export const AddReviewForm = ({
               ) : (
                 <>
                   <Link
-                    href="/auth/signin"
+                    href="/login"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-blue-600 hover:underline"
                   >
                     Sign in

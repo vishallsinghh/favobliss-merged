@@ -117,7 +117,7 @@ export default async function OrderDetailPage({ params }: PageParams) {
           )}
           <Button asChild>
             <Link
-              href={`/${params.storeId}/orders/${order.id}/invoice`}
+              href={`/admin/orders/${order.id}/invoice`}
               aria-label="View invoice"
             >
               <FileText className="mr-2 h-4 w-4" />
@@ -200,7 +200,10 @@ export default async function OrderDetailPage({ params }: PageParams) {
               <CardTitle className="text-base">Items</CardTitle>
             </CardHeader>
             <CardContent>
-              <OrderItemsTable items={order.orderProducts} formatter={formatter} />
+              <OrderItemsTable
+                items={order.orderProducts}
+                formatter={formatter}
+              />
             </CardContent>
           </Card>
 

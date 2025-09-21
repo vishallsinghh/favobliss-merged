@@ -144,17 +144,6 @@ export async function POST(
         }
       }
 
-      if (variant.hsn) {
-        const existingVariant = await db.variant.findUnique({
-          where: { hsn: variant.hsn },
-        });
-        if (existingVariant) {
-          return new NextResponse(`HSN ${variant.hsn} already exists`, {
-            status: 400,
-          });
-        }
-      }
-
       if (!variant.variantPrices || variant.variantPrices.length === 0) {
         return new NextResponse(
           "Each variant must have at least one price for a location group",
@@ -255,7 +244,7 @@ export async function POST(
     console.log("[PRODUCTS_POST]", error);
     if (error.code === "P2002") {
       return NextResponse.json(
-        { error: "Slug or SKU or HSN already exists" },
+        { error: "Slug or SKU already exists" },
         { status: 400 }
       );
     }

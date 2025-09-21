@@ -167,7 +167,7 @@ export const Summary = (props: Props) => {
         coupon: appliedCoupon
           ? { code: appliedCoupon.code, value: discount }
           : null,
-        gstNumber: gstNumber || undefined,
+        gstNumber: hasGstNumber ? gstNumber : undefined,
       });
 
       const { orderId, razorpayData } = response.data;
@@ -249,9 +249,9 @@ export const Summary = (props: Props) => {
         });
         razorpay.open();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error("Something went wrong");
+      toast.error(error?.response?.data || "Something went wrong");
     } finally {
       setLoading(false);
     }

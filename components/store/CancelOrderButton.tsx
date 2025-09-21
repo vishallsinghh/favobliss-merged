@@ -58,9 +58,9 @@ export const CancelOrderButton = ({
         router.push("/orders");
         router.refresh();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error canceling order:", error);
-      toast.error("Failed to cancel order");
+      toast.error(error?.response?.data || "Failed to cancel order");
     } finally {
       setIsLoading(false);
     }

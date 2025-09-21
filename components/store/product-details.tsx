@@ -1061,24 +1061,32 @@ export const ProductDetails = (props: ProductDetailsProps) => {
 
             {!isPincodeChecked ? (
               <div className="space-y-3">
-                <div className="flex items-center gap-2">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handlePincodeCheck();
+                  }}
+                  className="flex items-center gap-2"
+                >
                   <Input
                     type="text"
                     value={pincode}
                     onChange={(e) => setPincode(e.target.value)}
                     placeholder="Enter pincode"
-                    className="flex-1 h-9 text-sm border-gray-300 focus:border-[#ee8c1d] "
+                    className="flex-1 h-9 text-sm border-gray-300 focus:border-[#ee8c1d]"
                     maxLength={6}
                   />
+
                   <Button
+                    type="submit"
                     variant="outline"
                     className="h-9 px-4 text-sm font-medium text-[#ee8c1d] border-[#ee8c1d] hover:bg-[#ee8c1d]"
-                    onClick={handlePincodeCheck}
                     disabled={!pincode.trim() || pincode.length < 6}
                   >
                     Check
                   </Button>
-                </div>
+                </form>
+
                 <p className="text-xs text-gray-500">
                   Please enter PIN code to check delivery time & pay on delivery
                   availability
