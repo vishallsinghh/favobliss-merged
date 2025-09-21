@@ -57,11 +57,7 @@ export const Account = () => {
         {isAuthenticated ? (
           <>
             {isAdmin && (
-              <Link
-                href="/admin/dashboard"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link href="/admin" target="_blank" rel="noopener noreferrer">
                 <DropdownMenuItem className="flex items-center text-zinc-700 font-semibold md:cursor-pointer">
                   <Store className="mr-3 h-4 w-4" />
                   Admin Dashboard
