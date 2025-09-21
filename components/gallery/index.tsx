@@ -231,9 +231,9 @@ export const Gallery = ({
   }
 
   const MobileSkeleton = () => (
-    <div className="block md:hidden aspect-[3/4] relative">
+    // <div className="block md:hidden aspect-[3/4] relative">
       <Skeleton className="w-full h-full bg-zinc-200" />
-    </div>
+    // </div>
   );
 
   const VideoControls = ({

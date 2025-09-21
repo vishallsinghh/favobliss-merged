@@ -275,7 +275,7 @@ export const Summary = (props: Props) => {
             <Button
               onClick={handleApplyCoupon}
               disabled={loadingCoupons || !couponCode}
-              className="px-6 py-3 text-black text-sm font-medium border-0 bg-transparent"
+              className="px-6 py-3 text-black text-sm font-medium border-0 bg-transparent hover:bg-orange-400"
             >
               Apply
             </Button>

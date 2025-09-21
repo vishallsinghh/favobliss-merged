@@ -185,12 +185,89 @@ export const ProductDetails = (props: ProductDetailsProps) => {
       ) ?? null
     );
   };
-
   const initializeDefaultPrice = useCallback(() => {
     let activeLocationGroup: LocationGroup | null = null;
     let usedPincode: string | null = null;
 
-    if (session?.user && addresses?.length && !isAddressLoading) {
+    // Check local storage first
+    const storedLocation = localStorage.getItem("locationData");
+    if (storedLocation) {
+      try {
+        const parsed = JSON.parse(storedLocation);
+        const storedPincode = parsed?.pincode
+          ? String(parsed.pincode).trim()
+          : null;
+
+        if (storedPincode) {
+          usedPincode = storedPincode;
+          activeLocationGroup =
+            locationGroups.find((group) =>
+              group.locations.some((loc) => loc.pincode === storedPincode)
+            ) ?? null;
+          if (activeLocationGroup) {
+            const variantPrice = selectedVariant.variantPrices?.find(
+              //@ts-ignore
+              (vp) => vp.locationGroupId === activeLocationGroup.id
+            );
+
+            // Check if price is 0 (product not available)
+            if (variantPrice && variantPrice.price === 0) {
+              setIsProductAvailable(false);
+              setCurrentLocationGroupData(null);
+
+              // Fallback to 110040
+              const fallbackGroup = getFallbackGroup();
+              let fallbackVariantPrice = null;
+              if (fallbackGroup) {
+                fallbackVariantPrice = selectedVariant.variantPrices?.find(
+                  (vp) => vp.locationGroupId === fallbackGroup.id
+                );
+              }
+
+              setSelectedLocationGroupId(fallbackGroup?.id || null);
+              setLocationPrice({
+                price: fallbackVariantPrice?.price || 0,
+                mrp: fallbackVariantPrice?.mrp || 0,
+              });
+
+              const matchedLocation = activeLocationGroup.locations.find(
+                (loc) => loc.pincode === storedPincode
+              );
+              setIsCodAvailableForPincode(false);
+              setDeliveryInfo({
+                location: `${
+                  matchedLocation?.city || "Unknown"
+                }, ${storedPincode}`,
+                estimatedDelivery: 0,
+                isCodAvailable: false,
+              });
+            } else {
+              const matchedLocation = activeLocationGroup.locations.find(
+                (loc) => loc.pincode === storedPincode
+              );
+              setIsCodAvailableForPincode(activeLocationGroup.isCodAvailable);
+              setDeliveryInfo({
+                location: `${
+                  matchedLocation?.city || "Unknown"
+                }, ${storedPincode}`,
+                estimatedDelivery: activeLocationGroup.deliveryDays || 0,
+                isCodAvailable: activeLocationGroup.isCodAvailable || false,
+              });
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Error parsing locationData:", e);
+      }
+    }
+
+    // If no active group from local storage, check session user addresses
+    if (
+      !activeLocationGroup &&
+      session?.user &&
+      addresses?.length &&
+      !isAddressLoading
+    ) {
       const defaultAddress = addresses.find(
         (address: Address) => address.isDefault
       );
@@ -361,79 +438,7 @@ export const ProductDetails = (props: ProductDetailsProps) => {
       }
     }
 
-    if (!activeLocationGroup) {
-      const storedLocation = localStorage.getItem("locationData");
-      if (storedLocation) {
-        try {
-          const parsed = JSON.parse(storedLocation);
-          const storedPincode = parsed?.pincode
-            ? String(parsed.pincode).trim()
-            : null;
-
-          if (storedPincode) {
-            usedPincode = storedPincode;
-            activeLocationGroup =
-              locationGroups.find((group) =>
-                group.locations.some((loc) => loc.pincode === storedPincode)
-              ) ?? null;
-            if (activeLocationGroup) {
-              const variantPrice = selectedVariant.variantPrices?.find(
-                //@ts-ignore
-                (vp) => vp.locationGroupId === activeLocationGroup.id
-              );
-
-              // Check if price is 0 (product not available)
-              if (variantPrice && variantPrice.price === 0) {
-                setIsProductAvailable(false);
-                setCurrentLocationGroupData(null);
-
-                // Fallback to 110040
-                const fallbackGroup = getFallbackGroup();
-                let fallbackVariantPrice = null;
-                if (fallbackGroup) {
-                  fallbackVariantPrice = selectedVariant.variantPrices?.find(
-                    (vp) => vp.locationGroupId === fallbackGroup.id
-                  );
-                }
-
-                setSelectedLocationGroupId(fallbackGroup?.id || null);
-                setLocationPrice({
-                  price: fallbackVariantPrice?.price || 0,
-                  mrp: fallbackVariantPrice?.mrp || 0,
-                });
-
-                const matchedLocation = activeLocationGroup.locations.find(
-                  (loc) => loc.pincode === storedPincode
-                );
-                setIsCodAvailableForPincode(false);
-                setDeliveryInfo({
-                  location: `${
-                    matchedLocation?.city || "Unknown"
-                  }, ${storedPincode}`,
-                  estimatedDelivery: 0,
-                  isCodAvailable: false,
-                });
-              } else {
-                const matchedLocation = activeLocationGroup.locations.find(
-                  (loc) => loc.pincode === storedPincode
-                );
-                setIsCodAvailableForPincode(activeLocationGroup.isCodAvailable);
-                setDeliveryInfo({
-                  location: `${
-                    matchedLocation?.city || "Unknown"
-                  }, ${storedPincode}`,
-                  estimatedDelivery: activeLocationGroup.deliveryDays || 0,
-                  isCodAvailable: activeLocationGroup.isCodAvailable || false,
-                });
-              }
-            }
-          }
-        } catch (e) {
-          console.error("Error parsing locationData:", e);
-        }
-      }
-    }
-
+    // If still no active group, use fallback
     if (!activeLocationGroup) {
       const fallbackPincode = "110040";
       usedPincode = fallbackPincode;
@@ -865,7 +870,7 @@ export const ProductDetails = (props: ProductDetailsProps) => {
           >
             Brand store
           </Link>
-          {avgRating && (
+          {avgRating ? (
             <div className="mt-2">
               <p className="text-[#088466] text-base">
                 <span className="inline-flex items-center gap-1">
@@ -894,6 +899,13 @@ export const ProductDetails = (props: ProductDetailsProps) => {
                 </span>
               </p>
             </div>
+          ) : (
+            <p
+              onClick={handleRatingClick}
+              className="text-gray-600 text-xs cursor-pointer hover:underline"
+            >
+              No Review
+            </p>
           )}
           {selectedVariant.stock <= 0 && (
             <Alert variant="destructive" className="mt-2">

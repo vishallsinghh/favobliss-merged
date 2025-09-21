@@ -66,6 +66,9 @@ export const ProductPageContent = ({
   >(null);
   const [locationPinCode, setLocationPinCode] = useState<string | null>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
@@ -215,24 +218,32 @@ export const ProductPageContent = ({
             setTotalReviews={setTotalReviews}
             subCategoryId={product?.subCategory?.id || ""}
             reviewsRef={reviewsRef}
+            showImageModal={showImageModal}
+            setShowImageModal={setShowImageModal}
+            showVideoModal={showVideoModal}
+            setShowVideoModal={setShowVideoModal}
+            showDeleteModal={showDeleteModal}
+            setShowDeleteModal={setShowDeleteModal}
           />
           <ProductList
             title="Similar Products"
             data={suggestProducts}
             locationGroups={locationGroups}
           />
-          <MobileStickyActionBar
-            show={showStickyBar}
-            price={locationPrice.price}
-            mrp={locationPrice.mrp}
-            product={productData}
-            selectedVariant={selectedVariant}
-            locationPrice={locationPrice}
-            selectedLocationGroupId={selectedLocationGroupId}
-            isProductAvailable={isProductAvailable}
-            deliveryInfo={deliveryInfo}
-            locationPinCode={locationPinCode}
-          />
+          {!showImageModal && !showVideoModal && !showDeleteModal && (
+            <MobileStickyActionBar
+              show={showStickyBar}
+              price={locationPrice.price}
+              mrp={locationPrice.mrp}
+              product={productData}
+              selectedVariant={selectedVariant}
+              locationPrice={locationPrice}
+              selectedLocationGroupId={selectedLocationGroupId}
+              isProductAvailable={isProductAvailable}
+              deliveryInfo={deliveryInfo}
+              locationPinCode={locationPinCode}
+            />
+          )}
         </div>
       </Container>
     </div>

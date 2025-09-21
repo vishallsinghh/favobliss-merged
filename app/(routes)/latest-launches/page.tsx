@@ -175,7 +175,9 @@ const LatestLaunches = async ({ params, searchParams }: CategoryPageProps) => {
             />
             <div className="hidden lg:block lg:border-r">
               <h3 className="mb-5 text-lg font-bold">Filters</h3>
-              <Filter valueKey="sizeId" name="Sizes" data={filteredSizes} />
+              {/* {filteredSizes.length > 0 && (
+                <Filter valueKey="sizeId" name="Sizes" data={filteredSizes} />
+              )} */}
               <Filter valueKey="colorId" name="Colors" data={colors} />
               <Filter valueKey="price" name="Price" data={priceRange} />
               <Filter valueKey="brandId" name="Brands" data={brands} />

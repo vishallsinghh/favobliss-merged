@@ -3,6 +3,7 @@ import Header from "./store/header";
 import HeaderMobile from "./store/HeaderMobile";
 import { SkeletonHeader } from "./SkeletonHeader";
 import { SkeletonHeaderMobile } from "./SkeletonHeaderMobile";
+import { getLocationGroups } from "@/actions/get-location-group";
 
 export const Navbar = async () => {
   const storeId =
@@ -20,11 +21,12 @@ export const Navbar = async () => {
     );
   }
   const data = await getCategories(storeId);
+  const locationGroups = await getLocationGroups();
 
   return (
     <header className="shadow-neutral-100 shadow-lg p-[15px] md:p-0">
-      <HeaderMobile categories={data} />
-      <Header categories={data} />
+      <HeaderMobile categories={data} locationGroups={locationGroups}  />
+      <Header categories={data} locationGroups={locationGroups} />
     </header>
   );
 };

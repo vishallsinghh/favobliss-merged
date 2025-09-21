@@ -39,10 +39,10 @@ export async function GET(
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "12");
     const skip = (page - 1) * limit;
-    const brandLimit = Math.floor(limit / 4);
-    const categoryLimit = Math.floor(limit / 4);
-    const subCategoryLimit = Math.floor(limit / 4);
-    const productLimit = query ? Math.ceil(limit / 4) : 4;
+    const brandLimit = Math.floor(limit);
+    const categoryLimit = Math.floor(limit);
+    const subCategoryLimit = Math.floor(limit);
+    const productLimit = query ? Math.ceil(limit) : 12;
 
     let searchResults;
 
@@ -104,15 +104,15 @@ export async function GET(
           brand: true,
           category: true,
           subCategory: { include: { parent: true } },
-          variants: { 
-            include: { 
-              size: true, 
-              color: true, 
+          variants: {
+            include: {
+              size: true,
+              color: true,
               images: true,
               variantSpecifications: {
-                include: { specificationField: { include: { group: true } } }
-              }
-            } 
+                include: { specificationField: { include: { group: true } } },
+              },
+            },
           },
         },
         orderBy: { createdAt: "desc" },
@@ -258,14 +258,14 @@ export async function GET(
               brand: true,
               category: true,
               subCategory: { include: { parent: true } },
-            }
+            },
           },
           size: true,
           color: true,
           images: true,
           variantSpecifications: {
-            include: { specificationField: { include: { group: true } } }
-          }
+            include: { specificationField: { include: { group: true } } },
+          },
         },
         orderBy: { createdAt: "desc" },
         skip,
@@ -274,11 +274,11 @@ export async function GET(
 
       // Group variants by product to return complete products
       const productsMap = new Map();
-      matchingVariants.forEach(variant => {
+      matchingVariants.forEach((variant) => {
         if (!productsMap.has(variant.productId)) {
           productsMap.set(variant.productId, {
             ...variant.product,
-            variants: []
+            variants: [],
           });
         }
         productsMap.get(variant.productId).variants.push(variant);
