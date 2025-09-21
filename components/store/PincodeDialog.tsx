@@ -27,6 +27,7 @@ const PincodeDialog = ({
   children,
 }: PincodeDialogProps) => {
   const [pincode, setPincode] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const getFallbackGroup = () => {
     return locationGroups.find((group) =>
@@ -34,8 +35,10 @@ const PincodeDialog = ({
     );
   };
 
-  const handlePincodeCheck = () => {
+  const handlePincodeCheck = async () => {
     if (pincode.trim()) {
+      setIsLoading(true);
+
       const foundGroup = locationGroups.find((group) =>
         group.locations.some((loc: any) => loc.pincode === pincode.trim())
       );
@@ -44,18 +47,21 @@ const PincodeDialog = ({
       );
 
       if (foundGroup && foundLocation) {
+        // Store the valid pincode data
+        const locationData = {
+          city: foundLocation.city,
+          state: foundLocation.state,
+          country: foundLocation.country || "India",
+          pincode: foundLocation.pincode,
+        };
+        localStorage.setItem("locationData", JSON.stringify(locationData));
+        window.dispatchEvent(new Event("locationDataUpdated"));
 
-        // if (variantPrice) {
-          const locationData = {
-            city: foundLocation.city,
-            state: foundLocation.state,
-            country: foundLocation.country || "India",
-            pincode: foundLocation.pincode,
-          };
-          localStorage.setItem("locationData", JSON.stringify(locationData));
-          window.dispatchEvent(new Event("locationDataUpdated"));
-        }
-          else {
+        // Reload the page after a brief delay to ensure storage is updated
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+      } else {
         // No group found, fallback to 110040
         const fallbackGroup = getFallbackGroup();
         const fallbackLocation = fallbackGroup
@@ -72,11 +78,19 @@ const PincodeDialog = ({
             JSON.stringify(fallbackLocation)
           );
           window.dispatchEvent(new Event("locationDataUpdated"));
+
+          // Reload the page after a brief delay
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        } else {
+          // If no fallback available, just close dialog
+          setPincode(""); // Reset input
+          onOpenChange(false); // Close dialog
+          setIsLoading(false);
         }
       }
     }
-    setPincode(""); // Reset input
-    onOpenChange(false); // Close dialog
   };
 
   return (
@@ -94,9 +108,16 @@ const PincodeDialog = ({
           placeholder="Enter pincode"
           value={pincode}
           onChange={(e) => setPincode(e.target.value)}
+          disabled={isLoading}
         />
         <DialogFooter>
-          <Button onClick={handlePincodeCheck}>Check</Button>
+          <Button
+            onClick={handlePincodeCheck}
+            disabled={!pincode.trim() || isLoading}
+            className={isLoading ? "opacity-50 cursor-not-allowed" : ""}
+          >
+            {isLoading ? "Checking..." : "Check"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
