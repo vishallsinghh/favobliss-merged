@@ -5,7 +5,7 @@ import { MdArrowRight, MdArrowDropUp, MdArrowDropDown } from "react-icons/md";
 import Link from "next/link";
 import useMediaQuery from "@/hooks/use-mediaquery";
 import { Popover, Transition } from "@headlessui/react";
-import { Address, MenuCategory, MenuItem } from "@/types";
+import { Address, LocationGroup, MenuCategory, MenuItem } from "@/types";
 import { useRouter } from "next/navigation";
 import { Account } from "@/components/account";
 import { useCart } from "@/hooks/use-cart";
@@ -13,6 +13,8 @@ import { formatter } from "@/lib/utils";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useSession } from "next-auth/react";
 import { useAddress } from "@/hooks/use-address";
+import PincodeDialog from "./PincodeDialog";
+import { getLocationGroups } from "@/actions/get-location-group";
 
 const searchCategories = [
   "All",
@@ -33,9 +35,13 @@ const searchCategories = [
 
 interface DynamicHeaderProps {
   categories: any[];
+  locationGroups: LocationGroup[];
 }
 
-export default function DynamicHeader({ categories }: DynamicHeaderProps) {
+export default function DynamicHeader({
+  categories,
+  locationGroups,
+}: DynamicHeaderProps) {
   const isMobile = useMediaQuery("(max-width: 1000px)");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
@@ -64,6 +70,7 @@ export default function DynamicHeader({ categories }: DynamicHeaderProps) {
   });
   const { data: session } = useSession();
   const { data: addresses, isLoading: isAddressLoading } = useAddress();
+  const [showPincodeDialog, setShowPincodeDialog] = useState(false);
 
   const itemCount = getItemCount() || 0;
   const totalAmount = getTotalAmount() || 0;
@@ -596,7 +603,7 @@ export default function DynamicHeader({ categories }: DynamicHeaderProps) {
                           : "Explore These Categories"}
                       </h3>
                     </div>
-                    <div className="overflow-y-auto max-h-[450px]">
+                    <div className="overflow-y-auto max-h-[300px]">
                       {isSearching ? (
                         <div className="px-4 py-3 text-sm text-gray-700">
                           Searching...
@@ -690,7 +697,7 @@ export default function DynamicHeader({ categories }: DynamicHeaderProps) {
                           : "Popular Products"}
                       </h3>
                     </div>
-                    <div className="overflow-y-auto max-h-[450px]">
+                    <div className="overflow-y-auto max-h-[300px]">
                       {isSearching ? (
                         <div className="px-4 py-3 text-sm text-gray-700">
                           Loading products...
@@ -759,7 +766,7 @@ export default function DynamicHeader({ categories }: DynamicHeaderProps) {
           <div className="flex items-center space-x-6">
             <Account />
 
-            <div className="hidden md:flex items-center space-x-1 text-sm">
+            <div className="hidden md:flex items-center space-x-1 text-sm cursor-pointer" onClick={()=>setShowPincodeDialog(true)}>
               <MapPin size={24} />
               <span>
                 {defaultLocation?.city}, {defaultLocation?.pincode}
@@ -918,6 +925,11 @@ export default function DynamicHeader({ categories }: DynamicHeaderProps) {
           ))}
         </nav> */}
       </div>
+      <PincodeDialog
+        open={showPincodeDialog}
+        onOpenChange={setShowPincodeDialog}
+        locationGroups={locationGroups}
+      />
     </div>
   );
 }

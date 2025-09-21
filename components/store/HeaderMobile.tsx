@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import useMediaQuery from "@/hooks/use-mediaquery";
-import { MenuCategory, MenuItem } from "@/types";
+import { LocationGroup, MenuCategory, MenuItem } from "@/types";
 import { useSession } from "next-auth/react";
 import { Account } from "@/components/account";
 import { useCart } from "@/hooks/use-cart";
@@ -37,9 +37,10 @@ const searchCategories = [
 
 interface HeaderMobileProps {
   categories: any[];
+    locationGroups: LocationGroup[];
 }
 
-export default function HeaderMobile({ categories }: HeaderMobileProps) {
+export default function HeaderMobile({ categories, locationGroups }: HeaderMobileProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("All");

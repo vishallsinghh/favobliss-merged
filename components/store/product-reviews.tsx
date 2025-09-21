@@ -28,6 +28,12 @@ interface ProductReviewsProps {
   setTotalReviews: Dispatch<SetStateAction<number>>;
   subCategoryId: string;
   reviewsRef?: React.RefObject<HTMLDivElement>;
+  showImageModal: boolean;
+  setShowImageModal: Dispatch<SetStateAction<boolean>>;
+  showVideoModal: boolean;
+ setShowVideoModal: Dispatch<SetStateAction<boolean>>;
+ showDeleteModal: boolean;
+ setShowDeleteModal: Dispatch<SetStateAction<boolean>>
 }
 
 const CircularProgress = ({
@@ -97,15 +103,18 @@ export const ProductReviews = (props: ProductReviewsProps) => {
     setTotalReviews,
     subCategoryId,
     reviewsRef,
+    showImageModal,
+    showVideoModal,
+    showDeleteModal,
+    setShowDeleteModal,
+  setShowImageModal,
+  setShowVideoModal
   } = props;
   const { data: session } = useSession();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showImageModal, setShowImageModal] = useState(false);
-  const [showVideoModal, setShowVideoModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedVideo, setSelectedVideo] = useState("");
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [categoryAverages, setCategoryAverages] = useState<

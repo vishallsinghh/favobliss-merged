@@ -55,25 +55,59 @@ export const AddReviewForm = ({
 
   const canSubmitReview = isAdmin || isVerifiedBuyer;
 
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newImages = Array.from(e.target.files);
-      if (images.length + newImages.length > 5) {
+      const newFiles = Array.from(e.target.files);
+      const validImages: File[] = [];
+      let hasInvalid = false;
+
+      for (let file of newFiles) {
+        if (file.size > MAX_FILE_SIZE) {
+          hasInvalid = true;
+        } else {
+          validImages.push(file);
+        }
+      }
+
+      if (images.length + validImages.length > 5) {
         toast.error("Maximum 5 images allowed");
         return;
       }
-      setImages([...images, ...newImages]);
+
+      setImages([...images, ...validImages]);
+
+      if (hasInvalid) {
+        toast.error("Some images exceed 10MB limit and were not added.");
+      }
     }
   };
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newVideos = Array.from(e.target.files);
-      if (videos.length + newVideos.length > 5) {
+      const newFiles = Array.from(e.target.files);
+      const validVideos: File[] = [];
+      let hasInvalid = false;
+
+      for (let file of newFiles) {
+        if (file.size > MAX_FILE_SIZE) {
+          hasInvalid = true;
+        } else {
+          validVideos.push(file);
+        }
+      }
+
+      if (videos.length + validVideos.length > 5) {
         toast.error("Maximum 5 videos allowed");
         return;
       }
-      setVideos([...videos, ...newVideos]);
+
+      setVideos([...videos, ...validVideos]);
+
+      if (hasInvalid) {
+        toast.error("Some videos exceed 10MB limit and were not added.");
+      }
     }
   };
 
@@ -419,7 +453,7 @@ export const AddReviewForm = ({
                       : "Click to upload images"}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    JPEG, PNG up to 5MB each
+                    JPEG, PNG up to 10MB each
                   </p>
                 </label>
               </div>
@@ -472,7 +506,7 @@ export const AddReviewForm = ({
                       : "Click to upload videos"}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    MP4, WebM up to 50MB each
+                    MP4, WebM up to 10MB each
                   </p>
                 </label>
               </div>
