@@ -28,12 +28,13 @@ interface ProductReviewsProps {
   setTotalReviews: Dispatch<SetStateAction<number>>;
   subCategoryId: string;
   reviewsRef?: React.RefObject<HTMLDivElement>;
+  noReviewsRef?: React.RefObject<HTMLDivElement>;
   showImageModal: boolean;
   setShowImageModal: Dispatch<SetStateAction<boolean>>;
   showVideoModal: boolean;
- setShowVideoModal: Dispatch<SetStateAction<boolean>>;
- showDeleteModal: boolean;
- setShowDeleteModal: Dispatch<SetStateAction<boolean>>
+  setShowVideoModal: Dispatch<SetStateAction<boolean>>;
+  showDeleteModal: boolean;
+  setShowDeleteModal: Dispatch<SetStateAction<boolean>>;
 }
 
 const CircularProgress = ({
@@ -107,8 +108,9 @@ export const ProductReviews = (props: ProductReviewsProps) => {
     showVideoModal,
     showDeleteModal,
     setShowDeleteModal,
-  setShowImageModal,
-  setShowVideoModal
+    setShowImageModal,
+    setShowVideoModal,
+    noReviewsRef,
   } = props;
   const { data: session } = useSession();
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -298,7 +300,10 @@ export const ProductReviews = (props: ProductReviewsProps) => {
 
   if (totalReviews === 0 || !avgRating) {
     return (
-      <div className="w-full bg-white rounded-lg shadow-sm border p-6">
+      <div
+        className="w-full bg-white rounded-lg shadow-sm border p-6"
+        ref={noReviewsRef}
+      >
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Customer Reviews
         </h2>
@@ -500,7 +505,7 @@ export const ProductReviews = (props: ProductReviewsProps) => {
                       <div className="font-semibold text-gray-800">
                         {review.userName}
                       </div>
-                       <VerifiedBadgePremium />
+                      <VerifiedBadgePremium />
                     </div>
                     <div className="text-sm text-gray-500">
                       {new Date(review.createdAt).toLocaleDateString("en-US", {

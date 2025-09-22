@@ -66,6 +66,7 @@ interface ProductDetailsProps {
   >;
   divRef?: React.RefObject<HTMLDivElement>;
   reviewsRef?: React.RefObject<HTMLDivElement>;
+  noReviewsRef?: React.RefObject<HTMLDivElement>;
 }
 
 const formatDeliveryDate = (deliveryDays: number | null): string => {
@@ -109,6 +110,7 @@ export const ProductDetails = (props: ProductDetailsProps) => {
     setDeliveryInfo,
     divRef,
     reviewsRef,
+    noReviewsRef,
   } = props;
 
   const { variant, product, allVariants } = productData;
@@ -822,6 +824,12 @@ export const ProductDetails = (props: ProductDetailsProps) => {
     }
   };
 
+  const handleRatingClickNoReview = () => {
+    if (noReviewsRef?.current) {
+      noReviewsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const isLightColor = (hexColor: any) => {
     if (!hexColor) return false;
 
@@ -901,10 +909,10 @@ export const ProductDetails = (props: ProductDetailsProps) => {
             </div>
           ) : (
             <p
-              onClick={handleRatingClick}
+              onClick={handleRatingClickNoReview}
               className="text-gray-600 text-xs cursor-pointer hover:underline"
             >
-              No Review
+              No Reviews Yet
             </p>
           )}
           {selectedVariant.stock <= 0 && (

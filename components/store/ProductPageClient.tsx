@@ -72,6 +72,7 @@ export const ProductPageContent = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const reviewsRef = useRef<HTMLDivElement>(null);
+  const noReviewsRef = useRef<HTMLDivElement>(null);
 
   const handleVariantChange = (variant: Variant) => {
     setCurrentVariant(variant);
@@ -203,6 +204,7 @@ export const ProductPageContent = ({
                 setDeliveryInfo={setDeliveryInfo}
                 divRef={containerRef}
                 reviewsRef={reviewsRef}
+                noReviewsRef={noReviewsRef}
               />
             </div>
           </div>
@@ -224,6 +226,7 @@ export const ProductPageContent = ({
             setShowVideoModal={setShowVideoModal}
             showDeleteModal={showDeleteModal}
             setShowDeleteModal={setShowDeleteModal}
+            noReviewsRef={noReviewsRef}
           />
           <ProductList
             title="Similar Products"
