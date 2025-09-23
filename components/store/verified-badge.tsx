@@ -59,9 +59,7 @@ export function VerifiedBadgePremium({ className }: { className?: string }) {
       >
         <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z" />
       </svg>
-      <span className="tracking-tight text-xs whitespace-nowrap">VERIFIED</span>
-      {/* Sparkle effect */}
-      {/* <div className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-white rounded-full opacity-60 animate-pulse" /> */}
+      {/* <span className="tracking-tight text-xs whitespace-nowrap">VERIFIED</span> */}
     </div>
   );
 }

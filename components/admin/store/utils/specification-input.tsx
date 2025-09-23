@@ -26,8 +26,8 @@ export const SpecificationInput = ({
   specificationFields,
   onChange,
 }: SpecificationInputProps) => {
-  const [selectedFieldId, setSelectedFieldId] = useState<string | undefined>(
-    undefined
+  const [selectedFieldId, setSelectedFieldId] = useState<string>(
+    ""
   );
   const [fieldValue, setFieldValue] = useState("");
 
@@ -37,7 +37,7 @@ export const SpecificationInput = ({
         ...value,
         { specificationFieldId: selectedFieldId, value: fieldValue },
       ]);
-      setSelectedFieldId(undefined);
+      setSelectedFieldId("");
       setFieldValue("");
     }
   };
@@ -46,7 +46,6 @@ export const SpecificationInput = ({
     onChange(value.filter((_, i) => i !== index));
   };
 
-  // Group specification fields by group name
   const groupedFields = specificationFields.reduce((acc, field) => {
     const groupName = field.group.name;
     if (!acc[groupName]) {
@@ -55,6 +54,7 @@ export const SpecificationInput = ({
     acc[groupName].push(field);
     return acc;
   }, {} as Record<string, typeof specificationFields>);
+
 
   return (
     <div className="space-y-4">

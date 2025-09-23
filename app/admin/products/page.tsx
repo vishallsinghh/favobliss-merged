@@ -67,19 +67,11 @@ const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
       parent: true,
     },
   });
-
-  const defaultLocationGroup = await db.locationGroup.findFirst({
-    where: {
-      storeId: params.storeId,
-    },
-  });
+  
 
   const formattedProducts: ProductColumn[] = products.map((product) => {
     const firstVariant = product.variants[0];
-    const firstPrice = firstVariant?.variantPrices.find(
-      (vp) => vp.locationGroupId === defaultLocationGroup?.id
-    );
-    const price = firstPrice?.price?.toString() || "N/A";
+    const price = firstVariant?.variantPrices[0]?.price.toString() || "N/A";
     const stock = firstVariant?.stock || 0;
     const size = firstVariant?.size?.value || "None";
     const color = firstVariant?.color?.name || "None";

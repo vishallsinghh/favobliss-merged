@@ -24,6 +24,7 @@ import { getLocationGroups } from "@/actions/get-location-group";
 import HomeAppliance from "@/components/store/HomeAppliance";
 import BannerProductSection from "@/components/store/BannerProductSection";
 import BannerImage from "@/components/store/BannerImage";
+import HeroSliderMobile from "@/components/store/billboardMobile";
 
 export const revalidate = 0;
 
@@ -49,6 +50,7 @@ const LandingPage = async ({ params }: { params: { storeId: string } }) => {
   return (
     <div className="bg-[#f8f8f8]">
       <HeroSlider />
+      <HeroSliderMobile />
       <CategorySlider categories={categories} />
       <GalleryImage />
       <Container>

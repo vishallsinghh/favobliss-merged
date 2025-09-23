@@ -31,7 +31,7 @@ const PrevArrow = (props: any) => {
   );
 };
 
-const HeroSlider: React.FC = () => {
+const HeroSliderMobile: React.FC = () => {
   const settings = {
     dots: false,
     infinite: true,
@@ -62,15 +62,15 @@ const HeroSlider: React.FC = () => {
   const slides = [
     {
       id: 1,
-      src: "/assets/hero/banner-1.webp",
+      src: "/assets/hero/banner-boat.jpg",
       alt: "Best Television India",
       width: 1000,
       height: 340,
-      priority: true, 
+      priority: true,
     },
     {
       id: 2,
-      src: "/assets/hero/banner-1.webp",
+      src: "/assets/hero/banner-boat.jpg",
       alt: "Best Television India",
       width: 1000,
       height: 340,
@@ -78,7 +78,7 @@ const HeroSlider: React.FC = () => {
   ];
 
   return (
-    <section className="relative w-full hidden md:block">
+    <section className="relative w-full block md:hidden">
       <div className="relative w-full aspect-[3/1] max-h-[600px] overflow-hidden px-4 md:px-6 border-0">
         <Slider {...settings} className="h-full">
           {slides.map((slide) => (
@@ -146,4 +146,4 @@ const HeroSlider: React.FC = () => {
   );
 };
 
-export default HeroSlider;
+export default HeroSliderMobile;

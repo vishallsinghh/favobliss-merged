@@ -1,6 +1,6 @@
 "use client";
 
-import { Product, LocationGroup } from "@/types";
+import { Product, LocationGroup, Variant } from "@/types"; // Assuming Variant is imported or defined as type Variant = Product['variants'][number];
 import Image from "next/image";
 import { formatter } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -8,25 +8,31 @@ import { MouseEventHandler, useState, useEffect } from "react";
 import { usePreviewModal } from "@/hooks/use-preview-modal";
 import { useCart } from "@/hooks/use-cart";
 import { Star } from "lucide-react";
+import Link from "next/link";
 
 interface ProductCardProps {
   data: Product;
+  variant?: Variant;
   locationGroups: LocationGroup[];
 }
 
-export const ProductCard = ({ data, locationGroups }: ProductCardProps) => {
+export const ProductCard = ({
+  data,
+  variant,
+  locationGroups,
+}: ProductCardProps) => {
   const router = useRouter();
   const { onOpen } = usePreviewModal();
   const { addItem } = useCart();
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const theVariant = variant || data.variants[0];
   const [locationPrice, setLocationPrice] = useState<{
     price: number;
     mrp: number;
   }>({
-    price: data?.variants[0]?.variantPrices[0]?.price || 0,
+    price: theVariant?.variantPrices[0]?.price || 0,
     mrp:
-      data?.variants[0]?.variantPrices[0].mrp ||
-      data?.variants[0]?.variantPrices[0]?.price ||
+      theVariant?.variantPrices[0].mrp ||
+      theVariant?.variantPrices[0]?.price ||
       0,
   });
   const [selectedLocationGroupId, setSelectedLocationGroupId] = useState<
@@ -51,11 +57,9 @@ export const ProductCard = ({ data, locationGroups }: ProductCardProps) => {
           lg.locations.some((loc) => loc.pincode === inputPincode)
         )
       : null;
-    const selectedVariant =
-      data.variants[selectedVariantIndex] || data.variants[0];
 
-    if (locationGroup && selectedVariant?.variantPrices) {
-      const variantPrice = selectedVariant.variantPrices.find(
+    if (locationGroup && theVariant?.variantPrices) {
+      const variantPrice = theVariant.variantPrices.find(
         (vp) => vp.locationGroupId === locationGroup.id
       );
       if (variantPrice) {
@@ -70,7 +74,7 @@ export const ProductCard = ({ data, locationGroups }: ProductCardProps) => {
       (lg) => lg.id === defaultLocationGroupId
     );
     const defaultVariantPrice = defaultLocationGroup
-      ? selectedVariant?.variantPrices?.find(
+      ? theVariant?.variantPrices?.find(
           (vp) => vp.locationGroupId === defaultLocationGroup.id
         )
       : null;
@@ -79,10 +83,10 @@ export const ProductCard = ({ data, locationGroups }: ProductCardProps) => {
       price: defaultVariantPrice?.price || 0,
       mrp: defaultVariantPrice?.mrp || 0,
     });
-  }, [selectedVariantIndex, locationGroups, data.variants]);
+  }, [data, variant, locationGroups]);
 
   const onClick = () => {
-    router.push(`/product/${data?.variants[0].slug}`);
+    router.push(`/product/${theVariant?.slug}`);
   };
 
   const onPreview: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -117,36 +121,14 @@ export const ProductCard = ({ data, locationGroups }: ProductCardProps) => {
     ));
   };
 
-  const onVariantChange = (index: number) => {
-    setSelectedVariantIndex(index);
-  };
-
-  const selectedVariant =
-    data.variants[selectedVariantIndex] || data.variants[0];
-  const imageUrl = selectedVariant?.images[0]?.url || "/placeholder-image.jpg";
+  const imageUrl = theVariant?.images[0]?.url || "/placeholder-image.jpg";
   const discount = calculateDiscount(locationPrice.price, locationPrice.mrp);
 
-  // Get unique colors for variant display
-  const uniqueColors = data.variants.reduce((acc, variant) => {
-    if (
-      !acc.find(
-        (color) => color && variant.color && color.id === variant.color.id
-      )
-    ) {
-      acc.push(variant.color);
-    }
-    return acc;
-  }, [] as (typeof data.variants)[0]["color"][]);
-
-  const uniqueSizes = data.variants.reduce((acc, variant) => {
-    if (!acc.find((size) => size && variant.size && size.id === size.id)) {
-      acc.push(variant.size);
-    }
-    return acc;
-  }, [] as (typeof data.variants)[0]["size"][]);
-
   return (
-    <div onClick={onClick} className="w-full cursor-pointer">
+    <Link
+      href={`/product/${theVariant?.slug}`}
+      className="w-full cursor-pointer"
+    >
       <div className="relative bg-gray-100 rounded-xl p-3 md:p-4 shadow-[0_0_15px_0_rgba(107,114,128,0.25)] hover:shadow-[0_0_20px_0_rgba(107,114,128,0.35)] transition-shadow duration-200 h-full">
         {/* <div className="absolute top-2 left-2 bg-orange-400 text-white text-xs px-2 py-1 rounded-full font-medium z-[10]">
           {discount}% off
@@ -155,13 +137,13 @@ export const ProductCard = ({ data, locationGroups }: ProductCardProps) => {
         <div className="aspect-square mb-3 md:mb-4 flex items-center justify-center bg-white rounded-lg relative overflow-hidden">
           <Image
             src={imageUrl}
-            alt={data.variants[0].name}
+            alt={theVariant.name}
             fill
             className="object-contain rounded-lg p-2"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
 
-          {selectedVariant && selectedVariant.stock === 0 && (
+          {theVariant && theVariant.stock === 0 && (
             <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">
               Out of Stock
             </div>
@@ -170,7 +152,7 @@ export const ProductCard = ({ data, locationGroups }: ProductCardProps) => {
 
         <div className="space-y-2">
           <h3 className="font-medium text-gray-900 text-xs md:text-sm leading-tight line-clamp-2 min-h-[2rem] md:min-h-[2.5rem]">
-            {data.variants[0].name}
+            {theVariant.name}
           </h3>
           <div className="flex items-center space-x-1">
             {renderStars(data.averageRating || 0)}
@@ -206,6 +188,6 @@ export const ProductCard = ({ data, locationGroups }: ProductCardProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

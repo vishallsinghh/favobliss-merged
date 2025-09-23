@@ -11,6 +11,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const defaultCategoryImages = {
   "air conditioners": "/assets/category/air-conditioner.png",
@@ -80,10 +81,10 @@ export function CategorySlider(props: Props) {
             const isFirstRow = index < Math.ceil(categories.length / 2);
 
             return (
-              <div
+              <Link
+              href={`/category/${category.slug}?page=1`}
                 key={category.id}
                 className="group cursor-pointer flex flex-col items-center"
-                onClick={() => handleCategoryClick(category.slug)}
                 style={{
                   gridRow: isFirstRow ? 1 : 2,
                   gridColumn: isFirstRow
@@ -104,7 +105,7 @@ export function CategorySlider(props: Props) {
                     }}
                   />
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
@@ -139,9 +140,9 @@ export function CategorySlider(props: Props) {
                 key={category.id}
                 className="pl-1 basis-1/4 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-[12.5%] 2xl:basis-[10%]"
               >
-                <div
+                <Link
+                href={`/category/${category.slug}?page=1`}
                   className="group cursor-pointer"
-                  onClick={() => handleCategoryClick(category.slug)}
                 >
                   <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 mx-auto mb-3 overflow-hidden transition-all duration-300">
                     <Image
@@ -156,7 +157,7 @@ export function CategorySlider(props: Props) {
                       }}
                     />
                   </div>
-                </div>
+                </Link>
               </CarouselItem>
             );
           })}

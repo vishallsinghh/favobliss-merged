@@ -93,7 +93,7 @@ export interface Product {
   size: Size;
   color: Color;
   productImages: ProductImage[];
-  enabledFeatures: string[];
+  enabledFeatures: string;
   variants: Variant[];
   brand: Brand;
   expressDelivery: boolean;

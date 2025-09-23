@@ -81,7 +81,7 @@ const CircularProgress = ({
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-base font-bold text-gray-800">
+        <span className=" text-sm font-medium md:text-base md:font-bold text-gray-800">
           {value.toFixed(1)}
         </span>
       </div>
@@ -454,13 +454,13 @@ export const ProductReviews = (props: ProductReviewsProps) => {
                         <div className="mb-3">
                           <CircularProgress
                             value={cat.averageRating}
-                            size={60}
+                            size={50}
                             className="md:w-[80px] md:h-[80px]"
-                            strokeWidth={6}
+                            strokeWidth={4}
                             color={color}
                           />
                         </div>
-                        <div className="text-sm font-medium text-gray-700 capitalize">
+                        <div className="text-xs font-normal md:text-sm md:font-medium text-gray-700 capitalize">
                           {cat.categoryName}
                         </div>
                       </div>
@@ -514,6 +514,34 @@ export const ProductReviews = (props: ProductReviewsProps) => {
                         day: "numeric",
                       })}
                     </div>
+                    <div className="flex items-center gap-1 md:hidden">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar
+                      key={i}
+                      className={`h-4 w-4 ${
+                        i < review.rating
+                          ? review.rating >= 4
+                            ? "text-green-500"
+                            : review.rating >= 3
+                            ? "text-yellow-400"
+                            : "text-red-500"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  ))}
+                  <span className="ml-2 text-sm font-medium text-gray-700">
+                    {review.rating}.0
+                  </span>
+                  {canDeleteReview(review) && (
+                    <button
+                      onClick={() => openDeleteModal(review.id)}
+                      className="ml-4 p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-all duration-200 group"
+                      title="Delete Review"
+                    >
+                      <FaTrash className="h-3 w-3 group-hover:scale-110 transition-transform" />
+                    </button>
+                  )}
+                </div>
                     <div className="mt-4">
                       {(review.images.length > 0 ||
                         review.videos.length > 0) && (
@@ -553,7 +581,7 @@ export const ProductReviews = (props: ProductReviewsProps) => {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="md:flex items-center gap-1 hidden">
                   {[...Array(5)].map((_, i) => (
                     <FaStar
                       key={i}

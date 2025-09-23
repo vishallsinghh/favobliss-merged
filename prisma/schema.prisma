@@ -415,7 +415,7 @@ model Product {
   brand           Brand?          @relation("BrandToProduct", fields: [brandId], references: [id], onDelete: SetNull)
   sizeAndFit      String[]
   materialAndCare String[]
-  enabledFeatures String[]        @default([])
+  enabledFeatures String?
   expressDelivery Boolean         @default(false)
   warranty        String?
   isFeatured      Boolean         @default(false)

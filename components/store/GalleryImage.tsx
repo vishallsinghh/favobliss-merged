@@ -3,36 +3,36 @@ import Image from "next/image";
 const images = [
   {
     href: "/",
-    src: "/assets/gallery/juice-small.jpg",
+    src: "/assets/gallery/gallery-1.jpg",
     srcSet:
-      "/assets/gallery/juice-small.jpg 1x, /assets/gallery/juice-mid.jpg 2x",
+      "/assets/gallery/gallery-1.jpg 1x, /assets/gallery/gallery-1.jpg 2x",
     alt: "Mixer Grinder",
     width: 300,
     height: 400,
   },
   {
     href: "/",
-    src: "/assets/gallery/boat-small.jpg",
+    src: "/assets/gallery/gallery-2.jpg",
     srcSet:
-      "/assets/gallery/boat-small.jpg 1x, /assets/gallery/boat-mid.jpg 2x",
+      "/assets/gallery/gallery-2.jpg 1x, /assets/gallery/gallery-2.jpg 2x",
     alt: "BoAt Speaker",
     width: 600,
     height: 600,
   },
   {
     href: "/",
-    src: "/assets/gallery/cattle-small.jpg",
+    src: "/assets/gallery/gallery-3.jpg",
     srcSet:
-      "/assets/gallery/cattle-small.jpg 1x, /assets/gallery/cattle-mid.jpg 2x",
+      "/assets/gallery/gallery-3.jpg 1x, /assets/gallery/gallery-3.jpg 2x",
     alt: "Fashionable Watches",
     width: 300,
     height: 400,
   },
   {
     href: "/",
-    src: "/assets/gallery/juice-small.jpg",
+    src: "/assets/gallery/gallery-4.jpg",
     srcSet:
-      "/assets/gallery/juice-small.jpg 1x, /assets/gallery/juice-mid.jpg 2x",
+      "/assets/gallery/gallery-4.jpg 1x, /assets/gallery/gallery-4.jpg 2x",
     alt: "Mixer Grinder",
     width: 300,
     height: 400,
@@ -55,7 +55,7 @@ const Gallery = () => {
                 alt={img.alt}
                 fill
                 sizes="(max-width: 640px) 36vw, (max-width: 1024px) 50vw, 25vw"
-                className="object-cover"
+                className="object-fill"
               />
             </div>
           </a>

@@ -193,13 +193,16 @@ const LatestLaunches = async ({ params, searchParams }: CategoryPageProps) => {
                 <NoResults />
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 lg:gap-10">
-                  {products.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      data={product}
-                      locationGroups={locationGroups}
-                    />
-                  ))}
+                  {products.flatMap((product) =>
+                    product.variants.map((variant) => (
+                      <ProductCard
+                        key={variant.id}
+                        data={product}
+                        variant={variant}
+                        locationGroups={locationGroups}
+                      />
+                    ))
+                  )}
                 </div>
               )}
               <div className="w-full flex items-center justify-center pt-12">

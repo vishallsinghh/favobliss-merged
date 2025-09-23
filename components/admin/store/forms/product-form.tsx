@@ -14,12 +14,7 @@ import {
   VariantImage,
   LocationGroup,
 } from "@prisma/client";
-import {
-  useForm,
-  FieldError,
-  useFormContext,
-  useFieldArray,
-} from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -53,6 +48,7 @@ import VariantForm from "./variant-form";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/admin/modals/alert-modal";
 import { Input } from "@/components/ui/input";
+import Editor from "./editor"; // Import the Editor component
 
 const getSubCategoryName = (
   subCategory: SubCategory,
@@ -120,7 +116,7 @@ export const ProductForm = ({
           brandId: data.brandId ?? undefined,
           sizeAndFit: data.sizeAndFit || [],
           materialAndCare: data.materialAndCare || [],
-          enabledFeatures: data.enabledFeatures || [],
+          enabledFeatures: data.enabledFeatures || "", // Changed to string
           expressDelivery: data.expressDelivery || false,
           warranty: data.warranty || "",
           isFeatured: data.isFeatured || false,
@@ -142,7 +138,7 @@ export const ProductForm = ({
           brandId: undefined,
           sizeAndFit: [],
           materialAndCare: [],
-          enabledFeatures: [],
+          enabledFeatures: "", // Changed to string
           expressDelivery: false,
           warranty: "",
           isFeatured: false,
@@ -183,7 +179,7 @@ export const ProductForm = ({
           ],
         },
   });
-  // console.log("Form values:", values);
+
   console.log("Form errors:", form.formState.errors);
 
   const { fields, append, remove } = useFieldArray({
@@ -564,17 +560,10 @@ export const ProductForm = ({
               <FormItem>
                 <FormLabel>Enabled Features</FormLabel>
                 <FormControl>
-                  <ProductFeatures
-                    value={field.value || []}
+                  <Editor
+                    value={field.value || ""}
+                    onChange={field.onChange}
                     disabled={loading}
-                    onChange={(value) =>
-                      field.onChange([...(field.value || []), value])
-                    }
-                    onRemove={(value) =>
-                      field.onChange(
-                        (field.value || []).filter((data) => data !== value)
-                      )
-                    }
                   />
                 </FormControl>
                 <FormMessage className="w-full px-2 py-2 bg-destructive/20 text-destructive/70 rounded-md" />

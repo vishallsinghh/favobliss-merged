@@ -85,7 +85,7 @@ export const ProductSchema = z.object({
   brandId: z.string().nullable().optional(),
   sizeAndFit: z.array(z.string()).optional(),
   materialAndCare: z.array(z.string()).optional(),
-  enabledFeatures: z.array(z.string()).optional(),
+  enabledFeatures: z.string().optional(),
   expressDelivery: z.boolean().default(false),
   warranty: z.string().optional(),
   isFeatured: z.boolean().default(false),
