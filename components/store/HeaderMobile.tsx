@@ -37,10 +37,13 @@ const searchCategories = [
 
 interface HeaderMobileProps {
   categories: any[];
-    locationGroups: LocationGroup[];
+  locationGroups: LocationGroup[];
 }
 
-export default function HeaderMobile({ categories, locationGroups }: HeaderMobileProps) {
+export default function HeaderMobile({
+  categories,
+  locationGroups,
+}: HeaderMobileProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -147,6 +150,7 @@ export default function HeaderMobile({ categories, locationGroups }: HeaderMobil
   const handleResultClick = (href: string) => {
     setShowSearchResults(false);
     router.push(href);
+    setSearchQuery("");
   };
 
   // if (!isMobile) {
@@ -246,6 +250,16 @@ export default function HeaderMobile({ categories, locationGroups }: HeaderMobil
     );
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      router.push(
+        `/search?query=${encodeURIComponent(searchQuery.trim())}&page=1`
+      );
+      setShowSearchResults(false);
+      setSearchQuery("");
+    }
+  };
+
   return (
     <header className="bg-black text-white py-4 px-4 shadow-md border border-transparent rounded-2xl block md:hidden">
       {/* Top Row: Menu Icon, Logo, Profile, Cart */}
@@ -312,6 +326,7 @@ export default function HeaderMobile({ categories, locationGroups }: HeaderMobil
               value={searchQuery}
               onChange={handleSearchChange}
               onFocus={() => setShowSearchResults(true)}
+              onKeyDown={handleKeyDown}
             />
             <button className="absolute right-2 top-1/2 transform -translate-y-1/2">
               <Search size={18} className="text-gray-500" />

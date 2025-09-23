@@ -196,7 +196,7 @@ const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
   ];
 
   const breadcrumbItems = [
-    { label: "Home", href: "/" },
+    // { label: "Home", href: "/" },
     { label: category.name, href: `/category/${category.slug}?page=1` },
   ];
 

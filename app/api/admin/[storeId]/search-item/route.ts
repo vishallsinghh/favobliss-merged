@@ -112,6 +112,9 @@ export async function GET(
               variantSpecifications: {
                 include: { specificationField: { include: { group: true } } },
               },
+              variantPrices: {
+                include: { locationGroup: true },
+              },
             },
           },
         },
@@ -223,17 +226,21 @@ export async function GET(
         take: subCategoryLimit,
       });
 
+      const words = query.split(/\s+/).filter((word) => word.length > 0);
+
       // Search in variants instead of products
       const variantsWhere: any = {
         product: {
           storeId: params.storeId,
           isArchieved: false,
         },
-        OR: [
-          { name: { contains: query, mode: "insensitive" } },
-          { description: { contains: query, mode: "insensitive" } },
-          { about: { contains: query, mode: "insensitive" } },
-        ],
+        AND: words.map((word) => ({
+          OR: [
+            { name: { contains: word, mode: "insensitive" } },
+            // { description: { contains: word, mode: "insensitive" } },
+            // { about: { contains: word, mode: "insensitive" } },
+          ],
+        })),
       };
 
       if (brandName) {
@@ -265,6 +272,9 @@ export async function GET(
           images: true,
           variantSpecifications: {
             include: { specificationField: { include: { group: true } } },
+          },
+          variantPrices: {
+            include: { locationGroup: true },
           },
         },
         orderBy: { createdAt: "desc" },

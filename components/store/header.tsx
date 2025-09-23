@@ -254,6 +254,7 @@ export default function DynamicHeader({
   const handleResultClick = (href: string) => {
     setShowSearchResults(false);
     router.push(href);
+    setSearchQuery("");
   };
 
   const transformCategoriesToMenuCategories = (
@@ -362,6 +363,16 @@ export default function DynamicHeader({
     return categories.includes(category);
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      router.push(
+        `/search?query=${encodeURIComponent(searchQuery.trim())}&page=1`
+      );
+      setShowSearchResults(false);
+      setSearchQuery("");
+    }
+  };
+
   const renderHomeAppliancesMenu = (category: MenuCategory, close: any) => {
     return (
       <div className="py-2">
@@ -461,6 +472,7 @@ export default function DynamicHeader({
                   value={searchQuery}
                   onChange={handleSearchChange}
                   onFocus={() => setShowSearchResults(true)}
+                  onKeyDown={handleKeyDown}
                 />
                 <button className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 rounded transition-colors">
                   <Search size={24} className="text-black" />
@@ -766,7 +778,10 @@ export default function DynamicHeader({
           <div className="flex items-center space-x-6">
             <Account />
 
-            <div className="hidden md:flex items-center space-x-1 text-sm cursor-pointer" onClick={()=>setShowPincodeDialog(true)}>
+            <div
+              className="hidden md:flex items-center space-x-1 text-sm cursor-pointer"
+              onClick={() => setShowPincodeDialog(true)}
+            >
               <MapPin size={24} />
               <span>
                 {defaultLocation?.city}, {defaultLocation?.pincode}

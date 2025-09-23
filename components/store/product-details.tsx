@@ -758,23 +758,36 @@ export const ProductDetails = (props: ProductDetailsProps) => {
     onVariantChange,
   ]);
 
-  const handleSizeChange = useCallback(
-    (sizeId: string) => {
-      setSelectedSizeId(sizeId);
-      let availableColor =
-        selectedColorId &&
-        allVariants.find(
-          (v) => v.sizeId === sizeId && v.colorId === selectedColorId
-        )?.colorId;
-      if (!availableColor) {
-        availableColor = allVariants.find((v) => v.sizeId === sizeId)?.colorId;
-      }
-      if (availableColor) {
-        setSelectedColorId(availableColor);
-      }
-    },
-    [allVariants, selectedColorId]
-  );
+ const handleSizeChange = useCallback(
+  (sizeId: string) => {
+    setSelectedSizeId(sizeId);
+    
+    // Find all available colors for the selected size
+    const availableColorsForSize = allVariants
+      .filter(v => v.sizeId === sizeId)
+      .map(v => v.colorId);
+    
+    // Check if current selected color is available for the new size
+    const isCurrentColorAvailable = selectedColorId && 
+      availableColorsForSize.includes(selectedColorId);
+    
+    if (isCurrentColorAvailable) {
+      // Keep the current color if it's available
+      return;
+    }
+    
+    // If current color is not available, try to find the first available color
+    const firstAvailableColor = availableColorsForSize[0];
+    
+    if (firstAvailableColor) {
+      setSelectedColorId(firstAvailableColor);
+    } else {
+      // If no colors available for this size, reset color selection
+      setSelectedColorId(undefined);
+    }
+  },
+  [allVariants, selectedColorId]
+);
 
   useEffect(() => {
     if (isPincodeChecked && selectedLocationGroupId) {
@@ -793,23 +806,36 @@ export const ProductDetails = (props: ProductDetailsProps) => {
     setLocationPrice,
   ]);
 
-  const handleColorChange = useCallback(
-    (colorId: string) => {
-      setSelectedColorId(colorId);
-      let availableSize =
-        selectedSizeId &&
-        allVariants.find(
-          (v) => v.colorId === colorId && v.sizeId === selectedSizeId
-        )?.sizeId;
-      if (!availableSize) {
-        availableSize = allVariants.find((v) => v.colorId === colorId)?.sizeId;
-      }
-      if (availableSize) {
-        setSelectedSizeId(availableSize);
-      }
-    },
-    [allVariants, selectedSizeId]
-  );
+ const handleColorChange = useCallback(
+  (colorId: string) => {
+    setSelectedColorId(colorId);
+    
+    // Find all available sizes for the selected color
+    const availableSizesForColor = allVariants
+      .filter(v => v.colorId === colorId)
+      .map(v => v.sizeId);
+    
+    // Check if current selected size is available for the new color
+    const isCurrentSizeAvailable = selectedSizeId && 
+      availableSizesForColor.includes(selectedSizeId);
+    
+    if (isCurrentSizeAvailable) {
+      // Keep the current size if it's available
+      return;
+    }
+    
+    // If current size is not available, try to find the first available size
+    const firstAvailableSize = availableSizesForColor[0];
+    
+    if (firstAvailableSize) {
+      setSelectedSizeId(firstAvailableSize);
+    } else {
+      // If no sizes available for this color, reset size selection
+      setSelectedSizeId(undefined);
+    }
+  },
+  [allVariants, selectedSizeId]
+);
 
   const discountPercentage =
     locationPrice.mrp > 0
