@@ -437,7 +437,7 @@ export default function HeaderMobile({
         {showSearchResults && (
           <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-[9999] max-h-96 overflow-y-auto mt-1">
             <div className="flex flex-col md:flex-row min-h-[300px] max-h-[400px]">
-              <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-gray-200">
+              {/* <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-gray-200">
                 <div className="p-3 bg-gray-50 border-b border-gray-200">
                   <h3 className="text-base font-semibold text-gray-900">
                     {searchQuery || !searchResults?.isSuggested
@@ -452,7 +452,6 @@ export default function HeaderMobile({
                     </div>
                   ) : (
                     <div className="py-2">
-                      {/* Categories */}
                       {(searchResults?.categories ?? []).length > 0 && (
                         <>
                           {searchResults?.categories.map((category) => (
@@ -471,7 +470,6 @@ export default function HeaderMobile({
                         </>
                       )}
 
-                      {/* Subcategories */}
                       {(searchResults?.subCategories ?? []).length > 0 && (
                         <>
                           {searchResults?.subCategories?.map((subCategory) => (
@@ -521,7 +519,7 @@ export default function HeaderMobile({
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
 
               <div className="w-full md:w-1/2">
                 <div className="p-3 bg-gray-50 border-b border-gray-200">
@@ -553,7 +551,7 @@ export default function HeaderMobile({
                                   <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                                     <img
                                       src={product.variants[0].images[0].url}
-                                      alt={product.name}
+                                      alt={product.variants[0].name}
                                       className="w-8 h-8 object-contain rounded"
                                     />
                                   </div>
@@ -564,7 +562,7 @@ export default function HeaderMobile({
                                 )}
                                 <div className="flex-1 min-w-0">
                                   <p className="text-sm font-medium text-gray-900 line-clamp-2">
-                                    {product.name}
+                                    {product.variants[0].name}
                                   </p>
                                 </div>
                               </div>
