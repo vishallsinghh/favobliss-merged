@@ -113,7 +113,7 @@ export const CartItem = ({ data, deliveryDays }: CartItemProps) => {
         </div>
 
         {/* Quantity Controls */}
-        <div className="flex items-center gap-2 mx-4">
+        <div className="md:flex items-center gap-2 mx-4 hidden">
           <Button
             variant="outline"
             size="sm"
@@ -174,21 +174,47 @@ export const CartItem = ({ data, deliveryDays }: CartItemProps) => {
             MRP ₹{data.mrp}
           </div>
           <div className="flex flex-col gap-1">
-            <div className="text-xs text-white bg-red-600 rounded-full border border-transparent font-normal text-center px-2">
+            <div className="text-xs text-white bg-[#ee8e1d] rounded-full border border-transparent font-normal text-center px-2">
               {discountPercentage}% Off
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-2 w-full items-end mr-6">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onRemoveItem}
-            className="flex items-center gap-1 text-gray-600 hover:text-red-500 h-8 px-2"
-          >
-            <X className="h-4 w-4" />
-            <span className="text-xs">Remove</span>
-          </Button>
+
+        <div className="flex items-center justify-end gap-3 w-full mt-3">
+          <div className="flex items-center md:hidden">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => decreaseQuantity(data.selectedVariant.id)}
+              disabled={data.checkOutQuantity <= 1}
+              className="h-8 w-8 p-0 bg-transparent border-0 text-lg"
+            >
+              -
+            </Button>
+            <span className="text-sm font-semibold min-w-[20px] text-center">
+              {data.checkOutQuantity}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => increaseQuantity(data.selectedVariant.id)}
+              disabled={data.checkOutQuantity >= data.selectedVariant.stock}
+              className="h-8 w-8 p-0 bg-transparent border-0 text-lg"
+            >
+              +
+            </Button>
+          </div>
+          <div className="flex gap-2 mr-2 md:mr-6">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onRemoveItem}
+              className="flex items-center gap-1 text-gray-600 hover:text-red-500 h-8 px-2"
+            >
+              <X className="h-4 w-4" />
+              <span className="text-xs">Remove</span>
+            </Button>
+          </div>
         </div>
       </div>
     </li>
