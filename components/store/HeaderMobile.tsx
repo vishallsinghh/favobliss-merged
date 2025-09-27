@@ -604,7 +604,7 @@ export default function HeaderMobile({
       <div
         className={`fixed inset-y-0 left-0 w-64 bg-black text-white transform ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50 shadow-lg rounded-r-md`}
+        } transition-transform duration-300 ease-in-out z-99 shadow-lg rounded-r-md`}
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-700">
           <h2 className="text-lg font-semibold text-white">Menu</h2>

@@ -29,10 +29,10 @@ export const ProductCard = ({
     price: number;
     mrp: number;
   }>({
-    price: theVariant?.variantPrices[0]?.price || 0,
+    price: theVariant?.variantPrices.find((vp) => vp.price > 0)?.price || 0,
     mrp:
-      theVariant?.variantPrices[0].mrp ||
-      theVariant?.variantPrices[0]?.price ||
+      theVariant?.variantPrices.find((vp) => vp.price > 0)?.mrp ||
+      theVariant?.variantPrices.find((vp) => vp.price > 0)?.price ||
       0,
   });
   const [selectedLocationGroupId, setSelectedLocationGroupId] = useState<
@@ -62,9 +62,12 @@ export const ProductCard = ({
       const variantPrice = theVariant.variantPrices.find(
         (vp) => vp.locationGroupId === locationGroup.id
       );
-      if (variantPrice) {
+      if (variantPrice && variantPrice.price > 0) {
         setSelectedLocationGroupId(locationGroup.id);
-        setLocationPrice({ price: variantPrice.price, mrp: variantPrice.mrp });
+        setLocationPrice({
+          price: variantPrice.price,
+          mrp: variantPrice.mrp || variantPrice.price,
+        });
         return;
       }
     }
@@ -78,12 +81,27 @@ export const ProductCard = ({
           (vp) => vp.locationGroupId === defaultLocationGroup.id
         )
       : null;
-    setSelectedLocationGroupId(defaultLocationGroup?.id || null);
-    setLocationPrice({
-      price: defaultVariantPrice?.price || 0,
-      mrp: defaultVariantPrice?.mrp || 0,
-    });
-  }, [data, variant, locationGroups]);
+
+    if (defaultVariantPrice && defaultVariantPrice.price > 0) {
+      setSelectedLocationGroupId(defaultLocationGroup?.id || null);
+      setLocationPrice({
+        price: defaultVariantPrice.price,
+        mrp: defaultVariantPrice.mrp || defaultVariantPrice.price,
+      });
+    } else {
+      // If even default is 0 or not found, fall back to any available price > 0
+      const anyVariantPrice = theVariant.variantPrices.find(
+        (vp) => vp.price > 0
+      );
+      setSelectedLocationGroupId(
+        anyVariantPrice ? anyVariantPrice.locationGroupId : null
+      );
+      setLocationPrice({
+        price: anyVariantPrice?.price || 0,
+        mrp: anyVariantPrice?.mrp || anyVariantPrice?.price || 0,
+      });
+    }
+  }, [data, variant, locationGroups, theVariant]);
 
   const onClick = () => {
     router.push(`/product/${theVariant?.slug}`);
