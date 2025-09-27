@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { Home, ChevronRight } from "lucide-react";
-import useMediaQuery from "@/hooks/use-mediaquery";
 
 interface BreadcrumbItem {
   label: string;
@@ -15,13 +14,8 @@ interface BreadcrumbProps {
 }
 
 const Breadcrumb = ({ items }: BreadcrumbProps) => {
-  const isMobile = useMediaQuery("(max-width: 1000px)");
-  if (isMobile) {
-    return;
-  }
-
   return (
-    <nav className="flex items-center space-x-2 text-sm text-gray-600 py-2 px-16 bg-gray-50 border-b justify-start">
+    <nav className="hidden md:flex items-center space-x-2 text-sm text-gray-600 py-2 px-16 bg-gray-50 border-b justify-start">
       <Link
         href="/"
         className="flex items-center hover:text-gray-800 transition-colors"

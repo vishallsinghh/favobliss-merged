@@ -10,8 +10,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
-import { Skeleton } from "@/components/ui/skeleton";
-import { GallerySkeleton } from "./gallery-skeleton";
 import { ActionButtons } from "../store/ActionButton";
 import { FaPlay, FaPause, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import { PiShareFatFill } from "react-icons/pi";
@@ -55,19 +53,19 @@ export const Gallery = ({
 }: GalleryProps) => {
   const { onOpen } = useShareModal();
   const [activeTab, setActiveTab] = useState(images[0]?.id || "");
-  const [loadedMedia, setLoadedMedia] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const [videoStates, setVideoStates] = useState<Record<string, VideoState>>(
     {}
   );
   const controlsTimeoutRef = useRef<Record<string, NodeJS.Timeout>>({});
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const placeholder = `data:image/svg+xml;base64,Cjxzdmcgd2lkdGg9IjYwMCIgaGVpZ2h0PSI2MDAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciPgogICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjZjZmNGY0IiBvZmZzZXQ9IjIwJSIgLz4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI2VkZWJlYiIgb2Zmc2V0PSI1MCUiIC8+CiAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiNmNmY0ZjQiIG9mZnNldD0iNzAlIiAvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9IiNmNmY0ZjQiIC8+CiAgPHJlY3QgaWQ9InIiIHdpZHRoPSI2MDAiIGhlaWdodD0iNjAwIiBmaWxsPSJ1cmwoI2cpIiAvPgogIDxhbmltYXRlIHhsaW5rOmhyZWY9IiNyIiBhdHRyaWJ1dGVOYW1lPSJ4IiBmcm9tPSItNjAwIiB0bz0iNjAwIiBkdXI9IjFzIiByZXBlYXRDb3VudD0iaW5kZWZpbml0ZSIgIC8+Cjwvc3ZnPg==`;
 
   useEffect(() => {
     if (images.length > 0) {
       setActiveTab(images[0].id);
-      setLoadedMedia([]);
-      setIsLoading(true);
+      setActiveIndex(0);
 
       // Initialize video states
       const initialStates: Record<string, VideoState> = {};
@@ -87,38 +85,12 @@ export const Gallery = ({
     }
   }, [images]);
 
-  useEffect(() => {
-    if (images.length > 0 && loadedMedia.length >= images.length) {
-      setIsLoading(false);
-    }
-  }, [loadedMedia, images]);
-
-  useEffect(() => {
-    if (images.length > 0 && isLoading) {
-      const timeout = setTimeout(() => {
-        setIsLoading(false);
-      }, 5000);
-      return () => clearTimeout(timeout);
-    }
-  }, [images, isLoading]);
-
   // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
       Object.values(controlsTimeoutRef.current).forEach(clearTimeout);
     };
   }, []);
-
-  const handleMediaLoad = (mediaId: string) => {
-    setLoadedMedia((prev) => {
-      const newLoaded = Array.from(new Set([...prev, mediaId]));
-      return newLoaded;
-    });
-  };
-
-  const handleMediaError = (mediaId: string) => {
-    handleMediaLoad(mediaId);
-  };
 
   const updateVideoState = (mediaId: string, updates: Partial<VideoState>) => {
     setVideoStates((prev) => ({
@@ -229,12 +201,6 @@ export const Gallery = ({
       </div>
     );
   }
-
-  const MobileSkeleton = () => (
-    // <div className="block md:hidden aspect-[3/4] relative">
-      <Skeleton className="w-full h-full bg-zinc-200" />
-    // </div>
-  );
 
   const VideoControls = ({
     mediaId,
@@ -355,183 +321,194 @@ export const Gallery = ({
     );
   };
 
+  const isNearActive = (index: number) => Math.abs(index - activeIndex) <= 1;
+
+  const MobileGallery = () => (
+    <div className="block md:hidden relative mt-2 pb-4 md:pb-12">
+      <Swiper
+        spaceBetween={10}
+        pagination={{ clickable: true }}
+        modules={[Pagination]}
+        className="w-full swiper-pagination-bottom"
+        style={{ height: "auto", minHeight: "400px", maxHeight: "500px" }}
+        onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+      >
+        {images.map((media, index) => {
+          const shouldLoad = isNearActive(index);
+
+          return (
+            <SwiperSlide key={media.id}>
+              <div
+                className="relative w-full bg-[#f6f4f4] rounded-2xl"
+                style={{ height: "400px", maxHeight: "500px" }}
+              >
+                {media.mediaType === "IMAGE" ? (
+                  <>
+                    <Image
+                      src={media.url}
+                      alt="Variant Image"
+                      width={600}
+                      height={600}
+                      className="object-contain rounded-2xl"
+                      priority={index === 0}
+                      loading={index > 0 ? "lazy" : "eager"}
+                      placeholder="blur"
+                      blurDataURL={placeholder}
+                    />
+                    <div
+                      className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center cursor-pointer"
+                      onClick={onOpen}
+                    >
+                      <PiShareFatFill className="text-zinc-700 h-6 w-6" />
+                    </div>
+                  </>
+                ) : (
+                  <div
+                    className="relative w-full h-full flex items-center justify-center bg-black"
+                    onTouchStart={() => handleVideoMouseEnter(media.id)}
+                    onTouchEnd={() => handleVideoMouseLeave(media.id)}
+                  >
+                    <video
+                      ref={(el) => (videoRefs.current[index] = el)}
+                      src={shouldLoad ? media.url : undefined}
+                      poster={placeholder}
+                      className="object-contain max-h-full w-full rounded-2xl"
+                      muted={videoStates[media.id]?.isMuted}
+                      loop
+                      playsInline
+                      onEnded={() => handleVideoEnded(media.id)}
+                      onLoadStart={() =>
+                        updateVideoState(media.id, { isLoading: true })
+                      }
+                      onCanPlay={() => {
+                        updateVideoState(media.id, { isLoading: false });
+                      }}
+                      onTimeUpdate={() => handleTimeUpdate(index, media.id)}
+                      onLoadedMetadata={() => {
+                        const video = videoRefs.current[index];
+                        if (video) {
+                          updateVideoState(media.id, {
+                            duration: video.duration,
+                          });
+                        }
+                      }}
+                    />
+
+                    <VideoControls
+                      mediaId={media.id}
+                      index={index}
+                      isMobile={true}
+                    />
+                    <div
+                      className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center cursor-pointer"
+                      onClick={onOpen}
+                    >
+                      <PiShareFatFill className="text-zinc-700 h-6 w-6" />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </SwiperSlide>
+          );
+        })}
+      </Swiper>
+    </div>
+  );
+
+  const DesktopGallery = () => (
+    <Tabs
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="hidden md:flex flex-col-reverse md:px-24 lg:px-20 xl:px-28 relative"
+      role="div"
+    >
+      <div className="mx-auto mt-6 lg:mt-2 w-full max-w-2xl lg:max-w-none lg:absolute top-0 left-0 lg:w-16">
+        <TabsList className="grid grid-cols-4 lg:grid-cols-1 gap-4 md:gap-6 lg:gap-4 h-auto bg-white overflow-x-scroll md:overflow-y-scroll max-h-[60vh] scrollbar-hide">
+          {images.map((media) => (
+            <GalleryTab key={media.id} image={media} />
+          ))}
+        </TabsList>
+      </div>
+      {images.map((media, index) => {
+        if (activeTab !== media.id) return null;
+
+        return (
+          <TabsContent
+            key={media.id}
+            value={media.id}
+            className="relative overflow-hidden bg-[#f6f4f4] h-auto min-h-[500px] max-h-[600px] rounded-2xl"
+          >
+            {media.mediaType === "IMAGE" ? (
+              <>
+                <Image
+                  src={media.url}
+                  alt="Variant Image"
+                  width={600}
+                  height={600}
+                  className="w-full h-auto object-contain object-top max-h-full rounded-2xl"
+                  priority={index === 0}
+                  loading={index > 0 ? "lazy" : "eager"}
+                  placeholder="blur"
+                  blurDataURL={placeholder}
+                />
+                <div
+                  className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center md:cursor-pointer"
+                  onClick={onOpen}
+                >
+                  <PiShareFatFill className="text-zinc-700 h-6 w-6" />
+                </div>
+              </>
+            ) : (
+              <div
+                className="relative w-full h-full flex items-center justify-center bg-black min-h-[500px]"
+                onMouseEnter={() => handleVideoMouseEnter(media.id)}
+                onMouseLeave={() => handleVideoMouseLeave(media.id)}
+              >
+                <video
+                  ref={(el) => (videoRefs.current[index] = el)}
+                  src={media.url}
+                  poster={placeholder}
+                  className="object-contain max-h-full w-full h-auto rounded-2xl"
+                  muted={videoStates[media.id]?.isMuted}
+                  loop
+                  playsInline
+                  onEnded={() => handleVideoEnded(media.id)}
+                  onLoadStart={() =>
+                    updateVideoState(media.id, { isLoading: true })
+                  }
+                  onCanPlay={() => {
+                    updateVideoState(media.id, { isLoading: false });
+                  }}
+                  onTimeUpdate={() => handleTimeUpdate(index, media.id)}
+                  onLoadedMetadata={() => {
+                    const video = videoRefs.current[index];
+                    if (video) {
+                      updateVideoState(media.id, {
+                        duration: video.duration,
+                      });
+                    }
+                  }}
+                />
+
+                <VideoControls mediaId={media.id} index={index} />
+                <div
+                  className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center md:cursor-pointer"
+                  onClick={onOpen}
+                >
+                  <PiShareFatFill className="text-zinc-700 h-6 w-6" />
+                </div>
+              </div>
+            )}
+          </TabsContent>
+        );
+      })}
+    </Tabs>
+  );
+
   return (
     <div className="w-full">
-      {isLoading ? (
-        <MobileSkeleton />
-      ) : (
-        <div className="block md:hidden relative mt-2 pb-4 md:pb-12">
-          <Swiper
-            spaceBetween={10}
-            pagination={{ clickable: true }}
-            modules={[Pagination]}
-            className="w-full swiper-pagination-bottom"
-            style={{ height: "auto", minHeight: "400px", maxHeight: "500px" }}
-          >
-            {images.map((media, index) => (
-              <SwiperSlide key={media.id}>
-                <div
-                  className="relative w-full bg-[#f6f4f4] rounded-2xl"
-                  style={{ height: "400px", maxHeight: "500px" }}
-                >
-                  {media.mediaType === "IMAGE" ? (
-                    <>
-                      <Image
-                        src={media.url}
-                        alt="Variant Image"
-                        // fill
-                        width={600}
-                        height={600}
-                        className="object-contain rounded-2xl"
-                        onLoad={() => handleMediaLoad(media.id)}
-                        onError={() => handleMediaError(media.id)}
-                        priority={index === 0}
-                        loading={index > 0 ? "lazy" : "eager"}
-                      />
-                      <div
-                        className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center cursor-pointer"
-                        onClick={onOpen}
-                      >
-                        <PiShareFatFill className="text-zinc-700 h-6 w-6" />
-                      </div>
-                    </>
-                  ) : (
-                    <div
-                      className="relative w-full h-full flex items-center justify-center bg-black"
-                      onTouchStart={() => handleVideoMouseEnter(media.id)}
-                      onTouchEnd={() => handleVideoMouseLeave(media.id)}
-                    >
-                      <video
-                        ref={(el) => (videoRefs.current[index] = el)}
-                        src={media.url}
-                        className="object-contain max-h-full w-full rounded-2xl"
-                        muted={videoStates[media.id]?.isMuted}
-                        loop
-                        playsInline
-                        onEnded={() => handleVideoEnded(media.id)}
-                        onLoadStart={() =>
-                          updateVideoState(media.id, { isLoading: true })
-                        }
-                        onCanPlay={() =>
-                          updateVideoState(media.id, { isLoading: false })
-                        }
-                        onTimeUpdate={() => handleTimeUpdate(index, media.id)}
-                        onLoadedMetadata={() => {
-                          const video = videoRefs.current[index];
-                          if (video) {
-                            updateVideoState(media.id, {
-                              duration: video.duration,
-                            });
-                          }
-                        }}
-                      />
-
-                      <VideoControls
-                        mediaId={media.id}
-                        index={index}
-                        isMobile={true}
-                      />
-                      <div
-                        className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center cursor-pointer"
-                        onClick={onOpen}
-                      >
-                        <PiShareFatFill className="text-zinc-700 h-6 w-6" />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      )}
-
-      {isLoading ? (
-        <GallerySkeleton />
-      ) : (
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="hidden md:flex flex-col-reverse md:px-24 lg:px-20 xl:px-28 relative"
-          role="div"
-        >
-          <div className="mx-auto mt-6 lg:mt-2 w-full max-w-2xl lg:max-w-none lg:absolute top-0 left-0 lg:w-16">
-            <TabsList className="grid grid-cols-4 lg:grid-cols-1 gap-4 md:gap-6 lg:gap-4 h-auto bg-white overflow-x-scroll md:overflow-y-scroll max-h-[60vh] scrollbar-hide">
-              {images.map((media) => (
-                <GalleryTab key={media.id} image={media} />
-              ))}
-            </TabsList>
-          </div>
-          {images.map((media, index) => (
-            <TabsContent
-              key={media.id}
-              value={media.id}
-              className="relative overflow-hidden bg-[#f6f4f4] h-auto min-h-[500px] max-h-[600px] rounded-2xl"
-            >
-              {media.mediaType === "IMAGE" ? (
-                <>
-                  <Image
-                    src={media.url}
-                    alt="Variant Image"
-                    width={600}
-                    height={600}
-                    className="w-full h-auto object-contain object-top max-h-full rounded-2xl"
-                    onLoad={() => handleMediaLoad(media.id)}
-                    onError={() => handleMediaError(media.id)}
-                    priority={index === 0}
-                    loading={index > 0 ? "lazy" : "eager"}
-                  />
-                  <div
-                    className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center md:cursor-pointer"
-                    onClick={onOpen}
-                  >
-                    <PiShareFatFill className="text-zinc-700 h-6 w-6" />
-                  </div>
-                </>
-              ) : (
-                <div
-                  className="relative w-full h-full flex items-center justify-center bg-black min-h-[500px]"
-                  onMouseEnter={() => handleVideoMouseEnter(media.id)}
-                  onMouseLeave={() => handleVideoMouseLeave(media.id)}
-                >
-                  <video
-                    ref={(el) => (videoRefs.current[index] = el)}
-                    src={media.url}
-                    className="object-contain max-h-full w-full h-auto rounded-2xl"
-                    muted={videoStates[media.id]?.isMuted}
-                    loop
-                    playsInline
-                    onEnded={() => handleVideoEnded(media.id)}
-                    onLoadStart={() =>
-                      updateVideoState(media.id, { isLoading: true })
-                    }
-                    onCanPlay={() =>
-                      updateVideoState(media.id, { isLoading: false })
-                    }
-                    onTimeUpdate={() => handleTimeUpdate(index, media.id)}
-                    onLoadedMetadata={() => {
-                      const video = videoRefs.current[index];
-                      if (video) {
-                        updateVideoState(media.id, {
-                          duration: video.duration,
-                        });
-                      }
-                    }}
-                  />
-
-                  <VideoControls mediaId={media.id} index={index} />
-                  <div
-                    className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center md:cursor-pointer"
-                    onClick={onOpen}
-                  >
-                    <PiShareFatFill className="text-zinc-700 h-6 w-6" />
-                  </div>
-                </div>
-              )}
-            </TabsContent>
-          ))}
-        </Tabs>
-      )}
+      <MobileGallery />
+      <DesktopGallery />
       <div className="mt-4 max-w-sm mx-auto hidden md:block">
         <ActionButtons
           productData={product}
