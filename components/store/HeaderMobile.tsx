@@ -17,6 +17,7 @@ import { Account } from "@/components/account";
 import { useCart } from "@/hooks/use-cart";
 import { useRouter } from "next/navigation";
 import { useDebounce } from "@/hooks/use-debounce";
+import Image from "next/image";
 
 const searchCategories = [
   "All",
@@ -262,22 +263,23 @@ export default function HeaderMobile({
 
   return (
     <header className="bg-black text-white py-4 px-4 shadow-md border border-transparent rounded-2xl block md:hidden">
-      {/* Top Row: Menu Icon, Logo, Profile, Cart */}
       <div className="flex items-center justify-between">
-        {/* Left: Menu Icon and Logo */}
         <div className="flex items-center space-x-4">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="focus:outline-none"
+            aria-label="Open menu"
           >
             <Menu size={24} className="text-white" />
           </button>
           <Link href="/">
-            <img
-              width="120px"
+            <Image
+              width={120}
+              height={45}
               className="rounded-md"
               src="/assets/favo-logo.jpg"
               alt="Favo Logo"
+              aria-label="Home"
             />
           </Link>
         </div>
@@ -285,16 +287,20 @@ export default function HeaderMobile({
         {/* Right: Profile, Cart */}
         <div className="flex items-start space-x-4">
           <Account />
-          <button className="relative">
-            <Link href="/checkout/cart">
-              <ShoppingCart size={24} />
-              {itemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
-                  {itemCount}
-                </span>
-              )}
-            </Link>
-          </button>
+          {/* <button className="relative" aria-label="cart"> */}
+          <Link
+            href="/checkout/cart"
+            className="relative"
+            aria-label="View shopping cart"
+          >
+            <ShoppingCart size={24} />
+            {itemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                {itemCount}
+              </span>
+            )}
+          </Link>
+          {/* </button> */}
         </div>
       </div>
 
@@ -328,7 +334,10 @@ export default function HeaderMobile({
               onFocus={() => setShowSearchResults(true)}
               onKeyDown={handleKeyDown}
             />
-            <button className="absolute right-2 top-1/2 transform -translate-y-1/2">
+            <button
+              className="absolute right-2 top-1/2 transform -translate-y-1/2"
+              aria-label="search"
+            >
               <Search size={18} className="text-gray-500" />
             </button>
           </div>
@@ -390,6 +399,7 @@ export default function HeaderMobile({
                                     src={subCategory.icon}
                                     alt={subCategory.name}
                                     className="w-full h-full object-cover"
+                                    loading="lazy"
                                   />
                                 ) : (
                                   <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-md flex items-center justify-center">
@@ -611,6 +621,7 @@ export default function HeaderMobile({
           <button
             onClick={() => setIsMenuOpen(false)}
             className="focus:outline-none p-1 rounded-full bg-gray-700 hover:bg-gray-600 transition-colors"
+            aria-label="close menu"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -643,6 +654,7 @@ export default function HeaderMobile({
                   href={category.slug}
                   className="text-base font-medium text-white"
                   onClick={() => setIsMenuOpen(false)}
+                  aria-label="category link"
                 >
                   {category.name}
                 </Link>
@@ -658,6 +670,7 @@ export default function HeaderMobile({
                       toggleCategory(category.name);
                     }}
                     className="focus:outline-none"
+                    aria-label="categories toggle"
                   >
                     {openCategories.includes(category.name) ? (
                       <Minus size={16} className="text-gray-400" />
@@ -703,6 +716,7 @@ export default function HeaderMobile({
                                 );
                               }}
                               className="focus:outline-none"
+                              aria-label="subcategories toggle"
                             >
                               {openCategories.includes(
                                 `${category.name}-${item.label}`
@@ -740,6 +754,7 @@ export default function HeaderMobile({
                                       href={subItem.href}
                                       className="block text-xs text-gray-300 hover:text-white hover:underline transition-colors"
                                       onClick={() => setIsMenuOpen(false)}
+                                      aria-label="subcategory link"
                                     >
                                       {subItem.label}{" "}
                                       {subItem.count !== undefined &&
@@ -755,6 +770,7 @@ export default function HeaderMobile({
                           href={item.href}
                           className="block text-sm py-1 px-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
                           onClick={() => setIsMenuOpen(false)}
+                          aria-label="subcategory link"
                         >
                           {item.label}{" "}
                           {item.count !== undefined && `(${item.count})`}
@@ -780,6 +796,7 @@ export default function HeaderMobile({
                               href={subItem.href}
                               className="block text-sm py-1 px-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
                               onClick={() => setIsMenuOpen(false)}
+                              aria-label="subcategory link"
                             >
                               {subItem.label}{" "}
                               {subItem.count !== undefined &&

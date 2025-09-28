@@ -48,7 +48,10 @@ export const Account = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="focus:outline-none">
+      <DropdownMenuTrigger
+        className="focus:outline-none"
+        aria-label="User menu"
+      >
         <FaRegUser className="h-6 w-6 mx-2" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-52" align="end">
