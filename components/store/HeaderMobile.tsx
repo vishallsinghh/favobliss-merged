@@ -277,7 +277,7 @@ export default function HeaderMobile({
               width={120}
               height={45}
               className="rounded-md"
-              src="/assets/favo-logo.jpg"
+              src="/assets/favobliss-logo.jpg"
               alt="Favo Logo"
               aria-label="Home"
             />
