@@ -41,7 +41,6 @@ const AccountLayout = async({ children }: AccountLayoutProps) => {
       </div>
       <WhatsAppButton />
       <Footer categories={data} />
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
     </>
   );
 };

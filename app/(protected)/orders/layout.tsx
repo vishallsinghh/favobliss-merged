@@ -29,7 +29,6 @@ const OrdersLayoutPage = async ({ children }: OrdersLayoutPageProps) => {
       <div className="w-full min-h-full">{children}</div>
       <WhatsAppButton />
       <Footer categories={data} />
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
     </div>
   );
 };
