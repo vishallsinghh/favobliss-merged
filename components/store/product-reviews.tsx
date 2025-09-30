@@ -495,7 +495,7 @@ export const ProductReviews = (props: ProductReviewsProps) => {
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center min-h-10 min-w-10">
                     <span className="text-white font-semibold text-sm">
                       {review.userName.charAt(0).toUpperCase()}
                     </span>
@@ -515,33 +515,33 @@ export const ProductReviews = (props: ProductReviewsProps) => {
                       })}
                     </div>
                     <div className="flex items-center gap-1 md:hidden">
-                  {[...Array(5)].map((_, i) => (
-                    <FaStar
-                      key={i}
-                      className={`h-4 w-4 ${
-                        i < review.rating
-                          ? review.rating >= 4
-                            ? "text-green-500"
-                            : review.rating >= 3
-                            ? "text-yellow-400"
-                            : "text-red-500"
-                          : "text-gray-300"
-                      }`}
-                    />
-                  ))}
-                  <span className="ml-2 text-sm font-medium text-gray-700">
-                    {review.rating}.0
-                  </span>
-                  {canDeleteReview(review) && (
-                    <button
-                      onClick={() => openDeleteModal(review.id)}
-                      className="ml-4 p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-all duration-200 group"
-                      title="Delete Review"
-                    >
-                      <FaTrash className="h-3 w-3 group-hover:scale-110 transition-transform" />
-                    </button>
-                  )}
-                </div>
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar
+                          key={i}
+                          className={`h-4 w-4 ${
+                            i < review.rating
+                              ? review.rating >= 4
+                                ? "text-green-500"
+                                : review.rating >= 3
+                                ? "text-yellow-400"
+                                : "text-red-500"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                      <span className="ml-2 text-sm font-medium text-gray-700">
+                        {review.rating}.0
+                      </span>
+                      {canDeleteReview(review) && (
+                        <button
+                          onClick={() => openDeleteModal(review.id)}
+                          className="ml-4 p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition-all duration-200 group"
+                          title="Delete Review"
+                        >
+                          <FaTrash className="h-3 w-3 group-hover:scale-110 transition-transform" />
+                        </button>
+                      )}
+                    </div>
                     <div className="mt-4">
                       {(review.images.length > 0 ||
                         review.videos.length > 0) && (
