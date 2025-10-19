@@ -369,18 +369,21 @@ export const Gallery = ({
                     onTouchStart={() => handleVideoMouseEnter(media.id)}
                     onTouchEnd={() => handleVideoMouseLeave(media.id)}
                   >
-                    {/* <video
+                    <video
                       // ref={(el) => (videoRefs.current[index] = el)}
                       src={shouldLoad ? media.url : undefined}
                       // poster={placeholder}
                       className="object-contain max-h-full w-full rounded-2xl"
-                      muted={videoStates[media.id]?.isMuted}
-                      loop
-                      playsInline
-                      onEnded={() => handleVideoEnded(media.id)}
-                      onError={(e) =>
-                        console.error(`Video ${media.id} error:`, e)
-                      }
+                      // muted={videoStates[media.id]?.isMuted}
+                      muted
+                      controls
+
+                      // loop
+                      // playsInline
+                      // onEnded={() => handleVideoEnded(media.id)}
+                      // onError={(e) =>
+                      //   console.error(`Video ${media.id} error:`, e)
+                      // }
                       // onLoadStart={() =>
                       //   updateVideoState(media.id, { isLoading: true })
                       // }
@@ -396,14 +399,14 @@ export const Gallery = ({
                       //     });
                       //   }
                       // }}
-                    /> */}
+                    />
 
                     {/* <VideoControls
                       mediaId={media.id}
                       index={index}
                       isMobile={true}
                     /> */}
-                    <VideoPlayer videoUrl={media.url} controls={true} />
+                    {/* <VideoPlayer videoUrl={media.url} controls={true} /> */}
                     <div
                       className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center cursor-pointer"
                       onClick={onOpen}
@@ -469,8 +472,8 @@ export const Gallery = ({
                 // onMouseEnter={() => handleVideoMouseEnter(media.id)}
                 // onMouseLeave={() => handleVideoMouseLeave(media.id)}
               >
-                <VideoPlayer videoUrl={media.url} controls={true} />
-                {/* <video
+                {/* <VideoPlayer videoUrl={media.url} controls={true} /> */}
+                <video
                   // ref={(el) => (videoRefs.current[index] = el)}
                   src={media.url}
                   // poster={placeholder}
@@ -478,7 +481,6 @@ export const Gallery = ({
                   // muted={videoStates[media.id]?.isMuted}
                   muted
                   controls
-                  autoPlay
                   // playsInline
                   // onEnded={() => handleVideoEnded(media.id)}
                   // onError={(e) => console.error(`Video ${media.id} error:`, e)}
@@ -497,7 +499,7 @@ export const Gallery = ({
                   //     });
                   //   }
                   // }}
-                /> */}
+                />
 
                 {/* <VideoControls mediaId={media.id} index={index} /> */}
                 <div
