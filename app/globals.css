@@ -40,6 +40,7 @@ body,
     --ring: 0 0% 3.9%;
  
     --radius: 0.5rem;
+    --plyr-color-main: #f09522; 
   }
  
   .dark {
@@ -171,3 +172,8 @@ example:
   .swiper-pagination{
     bottom: -5px !important;
   }
+
+  .bunny-player-container {
+  position: relative;
+  overflow: hidden;
+}

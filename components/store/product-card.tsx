@@ -104,7 +104,7 @@ export const ProductCard = ({
   }, [data, variant, locationGroups, theVariant]);
 
   const onClick = () => {
-    router.push(`/product/${theVariant?.slug}`);
+    router.push(`/${theVariant?.slug}`);
   };
 
   const onPreview: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -143,10 +143,7 @@ export const ProductCard = ({
   const discount = calculateDiscount(locationPrice.price, locationPrice.mrp);
 
   return (
-    <Link
-      href={`/product/${theVariant?.slug}`}
-      className="w-full cursor-pointer"
-    >
+    <Link href={`/${theVariant?.slug}`} className="w-full cursor-pointer">
       <div className="relative bg-gray-100 rounded-xl p-3 md:p-4 shadow-[0_0_15px_0_rgba(107,114,128,0.25)] hover:shadow-[0_0_20px_0_rgba(107,114,128,0.35)] transition-shadow duration-200 h-full">
         {/* <div className="absolute top-2 left-2 bg-orange-400 text-white text-xs px-2 py-1 rounded-full font-medium z-[10]">
           {discount}% off

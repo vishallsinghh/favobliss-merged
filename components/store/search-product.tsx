@@ -85,7 +85,7 @@ export const SearchProductCard = ({
   }, [selectedVariantIndex, locationGroups, data.variants]);
 
   const onClick = () => {
-    router.push(`/product/${data?.variants[0].slug}`);
+    router.push(`/${data?.variants[0].slug}`);
   };
 
   const onPreview: MouseEventHandler<HTMLButtonElement> = (event) => {

@@ -165,7 +165,7 @@ export const ProductDetails = (props: ProductDetailsProps) => {
     );
 
     if (matchingVariant && matchingVariant.id !== selectedVariant.id) {
-      router.push(`/product/${matchingVariant.slug}`);
+      router.push(`/${matchingVariant.slug}`);
     }
   }, [selectedSizeId, selectedColorId, allVariants]);
 

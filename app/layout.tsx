@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { ModalProvider } from "@/providers/admin/modal-provider";
 import { ThemeProvider } from "@/providers/admin/theme-provider";
 import { SessionProvider } from "next-auth/react";
+import "plyr-react/plyr.css"
 
 const roboto = Roboto({
   subsets: ["latin"],

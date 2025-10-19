@@ -553,7 +553,7 @@ export default function HeaderMobile({
                               key={product.id}
                               onClick={() =>
                                 handleResultClick(
-                                  `/product/${product?.variants[0]?.slug}`
+                                  `/${product?.variants[0]?.slug}`
                                 )
                               }
                               className="w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0"

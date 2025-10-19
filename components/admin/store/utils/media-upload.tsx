@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { CldUploadWidget } from "next-cloudinary";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ImagePlusIcon, Trash, Grip } from "lucide-react";
 import {
@@ -111,7 +110,7 @@ const SortableMediaItem = ({
 };
 
 export const MediaUpload = ({
-  value,
+  value: initialValue,
   disabled,
   onChange,
   onRemove,
@@ -122,7 +121,7 @@ export const MediaUpload = ({
   );
   const [loading, setLoading] = useState(false);
   const [uploadQueue, setUploadQueue] = useState<string[]>([]);
-  const [widgetKey, setWidgetKey] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -131,45 +130,77 @@ export const MediaUpload = ({
     };
   }, []);
 
-  useEffect(() => {
-    setWidgetKey((prev) => prev + 1);
-  }, [selectedMediaType]);
+  const handleUpload = async (files: FileList) => {
+    setLoading(true);
+    const newQueue = Array.from(files).map((f) => f.name);
+    setUploadQueue(newQueue);
 
-  const onUpload = (result: any) => {
-    if (result.event === "success") {
-      const newUrl = result.info.secure_url;
-      setUploadQueue((prev) => prev.filter((url) => url !== newUrl));
-      onChange([...value, { url: newUrl, mediaType: selectedMediaType }]);
-      toast.success(`${selectedMediaType.toLowerCase()} uploaded successfully`);
-    } else if (result.event === "error") {
-      setUploadQueue((prev) =>
-        prev.filter((url) => url !== result.info?.secure_url)
-      );
-      toast.error(`Failed to upload ${selectedMediaType.toLowerCase()}`);
-      console.error("[MEDIA_UPLOAD_ERROR]", result.info);
+    const uploadedItems: Array<{ url: string; mediaType: "IMAGE" | "VIDEO" }> =
+      [];
+
+    for (const file of Array.from(files)) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const apiEndpoint =
+          selectedMediaType === "IMAGE"
+            ? "/api/upload-image"
+            : "/api/upload-video";
+        const res = await fetch(apiEndpoint, {
+          method: "POST",
+          body: formData,
+        });
+        if (!res.ok) {
+          const { message } = await res.json();
+          throw new Error(message || "Upload failed");
+        }
+        const { url } = await res.json();
+        uploadedItems.push({ url, mediaType: selectedMediaType });
+        toast.success(
+          `${selectedMediaType.toLowerCase()} uploaded successfully`
+        );
+      } catch (error) {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : `Failed to upload ${selectedMediaType.toLowerCase()}`
+        );
+        console.error("Upload error:", error);
+      } finally {
+        setUploadQueue((prev) => prev.filter((name) => name !== file.name));
+      }
     }
+
+    // Update state with all uploaded items and preserve existing ones
+    if (uploadedItems.length > 0) {
+      onChange([...initialValue, ...uploadedItems]);
+    }
+
     if (uploadQueue.length === 0) {
       setLoading(false);
     }
-  };
-
-  const onUploadStart = (file: any) => {
-    setLoading(true);
-    setUploadQueue((prev) => [...prev, file.name]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = value.findIndex((item) => item.url === active.id);
-    const newIndex = value.findIndex((item) => item.url === over.id);
+    const oldIndex = initialValue.findIndex((item) => item.url === active.id);
+    const newIndex = initialValue.findIndex((item) => item.url === over.id);
 
-    const reorderedMedia = [...value];
+    const reorderedMedia = [...initialValue];
     const [movedItem] = reorderedMedia.splice(oldIndex, 1);
     reorderedMedia.splice(newIndex, 0, movedItem);
 
     onChange(reorderedMedia);
+  };
+
+  const onButtonClick = () => {
+    if (!loading && !disabled) {
+      fileInputRef.current?.click();
+    }
   };
 
   if (!isMounted) {
@@ -180,11 +211,11 @@ export const MediaUpload = ({
     <div>
       <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
         <SortableContext
-          items={value.map((item) => item.url)}
+          items={initialValue.map((item) => item.url)}
           strategy={horizontalListSortingStrategy}
         >
           <div className="mb-4 flex items-center gap-4 flex-wrap">
-            {value.map((media, index) => (
+            {initialValue.map((media, index) => (
               <SortableMediaItem
                 key={media.url}
                 media={media}
@@ -214,51 +245,32 @@ export const MediaUpload = ({
             <SelectItem value="VIDEO">Video</SelectItem>
           </SelectContent>
         </Select>
-        <CldUploadWidget
-          key={widgetKey}
-          onUpload={onUpload}
-          onQueuesStart={(files: any) => {
-            files.files.forEach((file: any) => onUploadStart(file));
-          }}
-          uploadPreset="manav-ecom"
-          options={{
-            sources: ["local", "url", "camera"],
-            multiple: true,
-            maxFiles: 5,
-            resourceType: selectedMediaType.toLowerCase(),
-            folder:
-              selectedMediaType === "VIDEO"
-                ? "product_videos"
-                : "product_images",
-            clientAllowedFormats:
-              selectedMediaType === "VIDEO"
-                ? ["mp4", "webm", "mov"]
-                : ["jpg", "png", "jpeg", "gif", "webp"],
-            //@ts-ignore
-            accept: selectedMediaType === "VIDEO" ? "video/*" : "image/*",
-            maxFileSize: selectedMediaType === "VIDEO" ? 100000000 : 10000000,
-          }}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={selectedMediaType === "VIDEO" ? "video/*" : "image/*"}
+          multiple
+          onChange={(e) => handleUpload(e.target.files!)}
+          className="hidden"
+          disabled={disabled || loading}
+        />
+        <Button
+          type="button"
+          disabled={disabled || loading}
+          onClick={onButtonClick}
+          variant="secondary"
         >
-          {({ open }) => {
-            const onClick = () => {
-              if (!loading) {
-                open();
-              }
-            };
-            return (
-              <Button
-                type="button"
-                disabled={disabled || loading}
-                onClick={onClick}
-                variant="secondary"
-              >
-                <ImagePlusIcon className="h-4 w-4 mr-2" />
-                Upload {selectedMediaType === "VIDEO" ? "Video" : "Image"}
-              </Button>
-            );
-          }}
-        </CldUploadWidget>
+          <ImagePlusIcon className="h-4 w-4 mr-2" />
+          {loading
+            ? "Uploading..."
+            : `Upload ${selectedMediaType === "VIDEO" ? "Video" : "Image"}`}
+        </Button>
       </div>
+      {uploadQueue.length > 0 && (
+        <p className="text-sm text-muted-foreground mt-2">
+          Uploading: {uploadQueue.join(", ")}
+        </p>
+      )}
     </div>
   );
 };

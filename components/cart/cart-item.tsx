@@ -34,7 +34,7 @@ export const CartItem = ({ data, deliveryDays }: CartItemProps) => {
   const router = useRouter();
 
   const handleProductAnchor = (path: string) => {
-    router.push(`/product/${path}`);
+    router.push(`/${path}`);
   };
 
   useEffect(() => {

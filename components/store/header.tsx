@@ -723,7 +723,7 @@ export default function DynamicHeader({
                                   key={product.id}
                                   onClick={() =>
                                     handleResultClick(
-                                      `/product/${product?.variants[0]?.slug}`
+                                      `/${product?.variants[0]?.slug}`
                                     )
                                   }
                                   className="w-full text-left px-4 py-3 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0"

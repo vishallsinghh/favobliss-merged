@@ -13,6 +13,7 @@ import { Pagination } from "swiper/modules";
 import { ActionButtons } from "../store/ActionButton";
 import { FaPlay, FaPause, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import { PiShareFatFill } from "react-icons/pi";
+import { VideoPlayer } from "../store/VideoPlayer";
 
 interface GalleryProps {
   images: VariantImage[];
@@ -364,41 +365,45 @@ export const Gallery = ({
                   </>
                 ) : (
                   <div
-                    className="relative w-full h-full flex items-center justify-center bg-black"
+                    className="relative w-full h-full flex items-center justify-center bg-[#f6f4f4]"
                     onTouchStart={() => handleVideoMouseEnter(media.id)}
                     onTouchEnd={() => handleVideoMouseLeave(media.id)}
                   >
-                    <video
-                      ref={(el) => (videoRefs.current[index] = el)}
+                    {/* <video
+                      // ref={(el) => (videoRefs.current[index] = el)}
                       src={shouldLoad ? media.url : undefined}
-                      poster={placeholder}
+                      // poster={placeholder}
                       className="object-contain max-h-full w-full rounded-2xl"
                       muted={videoStates[media.id]?.isMuted}
                       loop
                       playsInline
                       onEnded={() => handleVideoEnded(media.id)}
-                      onLoadStart={() =>
-                        updateVideoState(media.id, { isLoading: true })
+                      onError={(e) =>
+                        console.error(`Video ${media.id} error:`, e)
                       }
-                      onCanPlay={() => {
-                        updateVideoState(media.id, { isLoading: false });
-                      }}
-                      onTimeUpdate={() => handleTimeUpdate(index, media.id)}
-                      onLoadedMetadata={() => {
-                        const video = videoRefs.current[index];
-                        if (video) {
-                          updateVideoState(media.id, {
-                            duration: video.duration,
-                          });
-                        }
-                      }}
-                    />
+                      // onLoadStart={() =>
+                      //   updateVideoState(media.id, { isLoading: true })
+                      // }
+                      // onCanPlay={() => {
+                      //   updateVideoState(media.id, { isLoading: false });
+                      // }}
+                      // onTimeUpdate={() => handleTimeUpdate(index, media.id)}
+                      // onLoadedMetadata={() => {
+                      //   const video = videoRefs.current[index];
+                      //   if (video) {
+                      //     updateVideoState(media.id, {
+                      //       duration: video.duration,
+                      //     });
+                      //   }
+                      // }}
+                    /> */}
 
-                    <VideoControls
+                    {/* <VideoControls
                       mediaId={media.id}
                       index={index}
                       isMobile={true}
-                    />
+                    /> */}
+                    <VideoPlayer videoUrl={media.url} controls={true} />
                     <div
                       className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center cursor-pointer"
                       onClick={onOpen}
@@ -460,40 +465,44 @@ export const Gallery = ({
               </>
             ) : (
               <div
-                className="relative w-full h-full flex items-center justify-center bg-black min-h-[500px]"
-                onMouseEnter={() => handleVideoMouseEnter(media.id)}
-                onMouseLeave={() => handleVideoMouseLeave(media.id)}
+                className="relative w-full h-full flex items-center justify-center bg-[#f6f4f4] min-h-[500px]"
+                // onMouseEnter={() => handleVideoMouseEnter(media.id)}
+                // onMouseLeave={() => handleVideoMouseLeave(media.id)}
               >
-                <video
-                  ref={(el) => (videoRefs.current[index] = el)}
+                <VideoPlayer videoUrl={media.url} controls={true} />
+                {/* <video
+                  // ref={(el) => (videoRefs.current[index] = el)}
                   src={media.url}
-                  poster={placeholder}
+                  // poster={placeholder}
                   className="object-contain max-h-full w-full h-auto rounded-2xl"
-                  muted={videoStates[media.id]?.isMuted}
-                  loop
-                  playsInline
-                  onEnded={() => handleVideoEnded(media.id)}
-                  onLoadStart={() =>
-                    updateVideoState(media.id, { isLoading: true })
-                  }
-                  onCanPlay={() => {
-                    updateVideoState(media.id, { isLoading: false });
-                  }}
-                  onTimeUpdate={() => handleTimeUpdate(index, media.id)}
-                  onLoadedMetadata={() => {
-                    const video = videoRefs.current[index];
-                    if (video) {
-                      updateVideoState(media.id, {
-                        duration: video.duration,
-                      });
-                    }
-                  }}
-                />
+                  // muted={videoStates[media.id]?.isMuted}
+                  muted
+                  controls
+                  autoPlay
+                  // playsInline
+                  // onEnded={() => handleVideoEnded(media.id)}
+                  // onError={(e) => console.error(`Video ${media.id} error:`, e)}
+                  // onLoadStart={() =>
+                  //   updateVideoState(media.id, { isLoading: true })
+                  // }
+                  // onCanPlay={() => {
+                  //   updateVideoState(media.id, { isLoading: false });
+                  // }}
+                  // onTimeUpdate={() => handleTimeUpdate(index, media.id)}
+                  // onLoadedMetadata={() => {
+                  //   const video = videoRefs.current[index];
+                  //   if (video) {
+                  //     updateVideoState(media.id, {
+                  //       duration: video.duration,
+                  //     });
+                  //   }
+                  // }}
+                /> */}
 
-                <VideoControls mediaId={media.id} index={index} />
+                {/* <VideoControls mediaId={media.id} index={index} /> */}
                 <div
                   className="absolute h-10 w-10 top-4 right-4 bg-white rounded-full flex items-center justify-center md:cursor-pointer"
-                  onClick={onOpen}
+                  // onClick={onOpen}
                 >
                   <PiShareFatFill className="text-zinc-700 h-6 w-6" />
                 </div>

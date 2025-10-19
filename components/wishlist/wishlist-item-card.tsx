@@ -39,7 +39,7 @@ export const WishlistItemCard = ({ data, setItem }: WishlistItemCardProps) => {
   return (
     <div
       className="w-full hover:shadow-md md:cursor-pointer"
-      onClick={() => router.push(`/product/${data.variants[0].slug}`)}
+      onClick={() => router.push(`/${data.variants[0].slug}`)}
     >
       <div className="aspect-[3/4] overflow-hidden relative transition-shadow">
         <Image

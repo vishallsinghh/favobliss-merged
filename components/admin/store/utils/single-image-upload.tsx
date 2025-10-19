@@ -1,16 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { CldUploadWidget } from "next-cloudinary";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ImagePlusIcon, Trash } from "lucide-react";
+import { toast } from "sonner";
 
 interface ImageUploadProps {
-  value: string; // Changed from string[] to string
+  value: string;
   disabled: boolean;
-  onChange: (value: string) => void; // Changed to accept string
-  onRemove: () => void; // Simplified since no need to pass a specific URL
+  onChange: (value: string) => void;
+  onRemove: () => void;
 }
 
 export const SingleImageUpload = ({
@@ -20,14 +20,48 @@ export const SingleImageUpload = ({
   onRemove,
 }: ImageUploadProps) => {
   const [isMounted, setIsMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const onUpload = (result: any) => {
-    const newUrl = result.info.secure_url;
-    onChange(newUrl); // Set the new URL directly
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const { message } = await res.json();
+        throw new Error(message || "Upload failed");
+      }
+      const { url } = await res.json();
+      onChange(url);
+      toast.success("Image uploaded successfully");
+    } catch (error) {
+     toast.error(
+        error instanceof Error ? error.message : "Failed to upload image"
+      );
+      console.error("Upload error:", error);
+    } finally {
+      setLoading(false);
+      if (fileInputRef.current) fileInputRef.current.value = ""; // Reset input
+    }
+  };
+
+  const onButtonClick = () => {
+    if (!loading && !value && !disabled) {
+      fileInputRef.current?.click();
+    }
   };
 
   if (!isMounted) {
@@ -37,7 +71,7 @@ export const SingleImageUpload = ({
   return (
     <div>
       <div className="mb-4 flex items-center gap-4 flex-wrap">
-        {value && ( // Only render if there is a value
+        {value && (
           <div className="relative w-[200px] h-[220px] rounded-md overflow-hidden">
             <div className="z-10 absolute top-2 right-2">
               <Button
@@ -45,6 +79,7 @@ export const SingleImageUpload = ({
                 size="icon"
                 type="button"
                 onClick={onRemove}
+                disabled={disabled}
               >
                 <Trash className="h-4 w-4" />
               </Button>
@@ -53,24 +88,23 @@ export const SingleImageUpload = ({
           </div>
         )}
       </div>
-      <CldUploadWidget onUpload={onUpload} uploadPreset="manav-ecom">
-        {({ open }) => {
-          const onClick = () => {
-            open();
-          };
-          return (
-            <Button
-              type="button"
-              disabled={disabled || !!value} // Disable button if an image is already uploaded
-              onClick={onClick}
-              variant="secondary"
-            >
-              <ImagePlusIcon className="h-4 w-4 mr-2" />
-              Upload an Image
-            </Button>
-          );
-        }}
-      </CldUploadWidget>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleUpload}
+        className="hidden"
+        disabled={disabled || loading || !!value}
+      />
+      <Button
+        type="button"
+        disabled={disabled || loading || !!value}
+        onClick={onButtonClick}
+        variant="secondary"
+      >
+        <ImagePlusIcon className="h-4 w-4 mr-2" />
+        {loading ? "Uploading..." : "Upload an Image"}
+      </Button>
     </div>
   );
 };

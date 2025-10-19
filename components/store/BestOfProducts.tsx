@@ -60,7 +60,7 @@ const BestOfProduct = (props: Props) => {
   };
 
   const productPage = (path: string) => {
-    router.push(`/product/${path}`);
+    router.push(`/${path}`);
   };
 
   useEffect(() => {

@@ -1,58 +1,46 @@
 import { NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
+import { customAlphabet } from "nanoid";
 
-// Configure Cloudinary
-const cloudName = "dgcksrb1n";
-const apiKey = "225158414381951";
-const apiSecret = "uR-CTktbDCbmuh39hbL-8aTiXb8";
+const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 6);
 
+const storageZone = process.env.BUNNY_STORAGE_ZONE!;
+const storageApiKey = process.env.BUNNY_STORAGE_API_KEY!;
+const imagesHostname = process.env.BUNNY_IMAGES_HOSTNAME!;
+const region = process.env.BUNNY_STORAGE_REGION || "";
 
-// Check environment variables at startup
-if (!cloudName || !apiKey || !apiSecret) {
-  console.error("Missing Cloudinary environment variables:", {
-    cloud_name: cloudName,
-    api_key: apiKey,
-    api_secret: apiSecret ? "****" : undefined,
-  });
-  throw new Error(
-    "Cloudinary configuration failed. Please check CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in your .env file."
-  );
-}
-
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: cloudName,
-  api_key: apiKey,
-  api_secret: apiSecret,
-});
+const sanitizeFilename = (filename: string) => {
+  const extension = filename.split(".").pop()?.toLowerCase() || "";
+  const name = filename
+    .replace(/\.[^/.]+$/, "")
+    .replace(/[^a-zA-Z0-9]/g, "-")
+    .toLowerCase();
+  return `${name}.${extension}`;
+};
 
 export async function POST(req: Request) {
-  console.log("API Route: Starting POST request");
   try {
-    console.log("API Route: Cloudinary Config", {
-      cloud_name: cloudName,
-      api_key: apiKey,
-      api_secret: apiSecret ? "****" : undefined,
-    });
-
-    console.log("API Route: Parsing formData");
     const formData = await req.formData();
-    const file = formData.get("image") as File;
-    console.log("API Route: File received", file ? file.name : "No file");
+    const file = formData.get("file") as File;
 
     if (!file) {
-      return NextResponse.json({ message: "No file uploaded" }, { status: 400 });
+      return NextResponse.json(
+        { message: "No file uploaded" },
+        { status: 400 }
+      );
     }
 
     const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { message: "Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed." },
+        {
+          message:
+            "Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.",
+        },
         { status: 400 }
       );
     }
 
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       return NextResponse.json(
         { message: "File size exceeds 5MB limit." },
@@ -60,22 +48,45 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("API Route: Converting file to base64");
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const base64Image = buffer.toString("base64");
-    const dataUri = `data:${file.type};base64,${base64Image}`;
-
-    console.log("API Route: Uploading to Cloudinary");
-    const result = await cloudinary.uploader.upload(dataUri, {
-      folder: "product-images",
-      public_id: `${Date.now()}-${file.name}`,
+    const sanitizedName = sanitizeFilename(file.name);
+    const uniqueId = nanoid();
+    const path = "images";
+    const nameWithoutExtension = sanitizedName.replace(/\.[^/.]+$/, "");
+    const extension = sanitizedName.split(".").pop()!;
+    const filename = `${nameWithoutExtension}-${uniqueId}.${extension}`;
+    const checkUrl = `https://${region}storage.bunnycdn.com/${storageZone}/${path}/${filename}`;
+    const checkRes = await fetch(checkUrl, {
+      method: "HEAD",
+      headers: { AccessKey: storageApiKey },
     });
 
-    console.log("API Route: Upload successful", result.secure_url);
-    const imageUrl = result.secure_url;
+    if (checkRes.ok) {
+      return NextResponse.json(
+        {
+          message: "File with this name already exists. Try a different name.",
+        },
+        { status: 409 }
+      );
+    }
+
+    const uploadUrl = `https://${region}storage.bunnycdn.com/${storageZone}/${path}/${filename}`;
+    const uploadRes = await fetch(uploadUrl, {
+      method: "PUT",
+      headers: {
+        AccessKey: storageApiKey,
+        "Content-Type": file.type,
+      },
+      body: file,
+    });
+
+    if (!uploadRes.ok) {
+      throw new Error(`Upload failed: ${uploadRes.status}`);
+    }
+
+    const imageUrl = `https://${imagesHostname}/${path}/${filename}`;
     return NextResponse.json({ url: imageUrl }, { status: 200 });
   } catch (error) {
-    console.error("API Route Error:", error);
+    console.error("Image Upload Error:", error);
     return NextResponse.json(
       {
         message: "Internal server error",
