@@ -79,7 +79,7 @@ const HeroSliderMobile: React.FC = () => {
 
   return (
     <section className="relative w-full block md:hidden">
-      <div className="relative w-full aspect-[3/1] max-h-[600px] overflow-hidden px-4 md:px-6 border-0">
+      <div className="relative w-full aspect-[3/1] max-h-[600px] overflow-hidden px-4 md:px-6 border-0 h-[200px]">
         <Slider {...settings} className="h-full">
           {slides.map((slide) => (
             <div key={slide.id} className="relative w-full h-full">

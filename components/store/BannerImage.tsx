@@ -20,7 +20,7 @@ const BannerImage: FC<BannerImageProps> = ({
         src={imageUrl}
         alt={altText}
         fill
-        className="object-cover"
+        className="object-fill"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
         priority
       />
