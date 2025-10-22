@@ -2,10 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const Slider = dynamic(() => import("react-slick"), {
+  ssr: false,
+});
 
 const NextArrow = (props: any) => {
   const { onClick } = props;
@@ -32,7 +36,7 @@ const PrevArrow = (props: any) => {
 };
 
 const HeroSliderMobile: React.FC = () => {
-    const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const settings = {
     dots: false,
     infinite: true,
@@ -78,24 +82,35 @@ const HeroSliderMobile: React.FC = () => {
     // },
   ];
 
-   useEffect(() => {
-     const loadImages = slides.map((slide) => {
-       return new Promise((resolve) => {
-         const img = new window.Image();
-         img.src = slide.src;
-         img.onload = resolve;
-         img.onerror = resolve; 
-       });
-     });
- 
-     Promise.all(loadImages).then(() => setIsLoaded(true));
-   }, []);
-  
-    if (!isLoaded) {
-      return (
-        <div className="relative w-full aspect-[3/1] max-h-[600px] bg-transparent" />
-      );
-    }
+  useEffect(() => {
+    const loadImages = slides.map((slide) => {
+      return new Promise((resolve) => {
+        const img = new window.Image();
+        img.src = slide.src;
+        img.onload = resolve;
+        img.onerror = resolve;
+      });
+    });
+
+    Promise.all(loadImages).then(() => setIsLoaded(true));
+  }, []);
+
+  if (!isLoaded) {
+    return (
+      <div className="relative w-full aspect-[3/1] max-h-[600px] bg-transparent">
+        <Image
+          src="/assets/hero/banner-boat.jpg"
+          alt="Best Television India"
+          width={1000}
+          height={340}
+          className="w-full h-full object-fill object-center rounded-2xl"
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+        />
+      </div>
+    );
+  }
 
   return (
     <section className="relative w-full block md:hidden">

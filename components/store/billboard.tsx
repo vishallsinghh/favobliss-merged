@@ -2,10 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import dynamic from "next/dynamic";
+
+const Slider = dynamic(() => import("react-slick"), {
+  ssr: false,
+});
 
 const NextArrow = (props: any) => {
   const { onClick } = props;
@@ -94,7 +99,18 @@ const HeroSlider: React.FC = () => {
 
   if (!isLoaded) {
     return (
-      <div className="relative w-full aspect-[3/1] max-h-[600px] bg-transparent" />
+      <div className="relative w-full aspect-[3/1] max-h-[600px] bg-transparent">
+        <Image
+          src="/assets/hero/banner-1.webp"
+          alt="Best Television India"
+          width={1000}
+          height={340}
+          className="w-full h-full object-fill object-center rounded-2xl"
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+        />
+      </div>
     );
   }
 
