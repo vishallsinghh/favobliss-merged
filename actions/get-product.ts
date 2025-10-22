@@ -1,5 +1,6 @@
 import { Product, ProductApiResponse } from "@/types";
 import axios from "axios";
+import { notFound } from "next/navigation";
 
 const URL = process.env.NEXT_PUBLIC_STORE_URL;
 const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID;
@@ -21,7 +22,8 @@ export const getProductBySlug = async (
     }
   );
   if (!res.ok) {
-    throw new Error("Product not found");
+    notFound();
+    // throw new Error("Product not found");
   }
   return res.json();
 };

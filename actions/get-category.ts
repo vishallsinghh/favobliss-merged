@@ -1,4 +1,5 @@
 import { Category } from "@/types";
+import { notFound } from "next/navigation";
 
 const URL = process.env.NEXT_PUBLIC_STORE_URL;
 const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID;
@@ -18,7 +19,7 @@ export const getCategoryBySlug = async (slug: string): Promise<Category> => {
     }
   );
   if (!res.ok) {
-    throw new Error("Category not found");
+    notFound();
   }
   return res.json();
 };

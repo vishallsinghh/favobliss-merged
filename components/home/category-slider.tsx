@@ -1,16 +1,12 @@
 "use client";
 
-import * as React from "react";
+import {useState, useEffect} from "react";
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const defaultCategoryImages = {
@@ -45,11 +41,13 @@ interface Props {
 
 export function CategorySlider(props: Props) {
   const { categories } = props;
-  const router = useRouter();
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleCategoryClick = (slug: string) => {
-    router.push(`/category/${slug}?page=1`);
-  };
+useEffect(() => {
+    const img = new window.Image();
+    img.src = getImageSrc(categories[0]);
+    img.onload = () => setIsLoaded(true);
+  }, []);
 
   const getImageSrc = (category: Category) => {
     const lowerCaseName = category.name.toLowerCase();
@@ -114,6 +112,7 @@ export function CategorySlider(props: Props) {
   );
 
   const DesktopCarouselLayout = () => (
+    
     <div className="hidden md:block w-full bg-white py-8">
       <Carousel
         opts={{
@@ -165,6 +164,10 @@ export function CategorySlider(props: Props) {
       </Carousel>
     </div>
   );
+
+  if (!isLoaded) {
+    return <div className="hidden md:block w-full bg-white py-8 min-h-[200px]" />;
+  }
 
   return (
     <>
