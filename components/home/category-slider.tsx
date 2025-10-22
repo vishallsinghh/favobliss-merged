@@ -1,6 +1,6 @@
 "use client";
 
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Carousel,
@@ -43,7 +43,7 @@ export function CategorySlider(props: Props) {
   const { categories } = props;
   const [isLoaded, setIsLoaded] = useState(false);
 
-useEffect(() => {
+  useEffect(() => {
     const img = new window.Image();
     img.src = getImageSrc(categories[0]);
     img.onload = () => setIsLoaded(true);
@@ -59,7 +59,6 @@ useEffect(() => {
     return "/assets/category/air-conditioner.png";
   };
 
-  // Mobile/Tablet Grid Layout
   const MobileGridLayout = () => (
     <div className="block md:hidden w-full bg-white py-5 md:py-8 pb-0">
       <div className="px-4">
@@ -80,7 +79,7 @@ useEffect(() => {
 
             return (
               <Link
-              href={`/category/${category.slug}?page=1`}
+                href={`/category/${category.slug}?page=1`}
                 key={category.id}
                 className="group cursor-pointer flex flex-col items-center"
                 style={{
@@ -111,63 +110,66 @@ useEffect(() => {
     </div>
   );
 
-  const DesktopCarouselLayout = () => (
-    
-    <div className="hidden md:block w-full bg-white py-8">
-      <Carousel
-        opts={{
-          align: "start",
-          loop: false,
-          dragFree: true,
-        }}
-        className="w-full max-w-7xl mx-auto px-4"
-      >
-        <CarouselContent
-          className="-ml-1 justify-between overflow-x-auto touch-auto"
-          style={{
-            scrollBehavior: "smooth",
-            WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "thin",
-            msOverflowStyle: "scrollbar",
+  const DesktopCarouselLayout = () => {
+    if (!isLoaded) {
+      return (
+        <div className="hidden md:block w-full bg-white py-8 min-h-[200px]" />
+      );
+    }
+
+    return (
+      <div className="hidden md:block w-full bg-white py-8">
+        <Carousel
+          opts={{
+            align: "start",
+            loop: false,
+            dragFree: true,
           }}
+          className="w-full max-w-7xl mx-auto px-4"
         >
-          {categories.map((category, index) => {
-            const imageSrc = getImageSrc(category);
+          <CarouselContent
+            className="-ml-1 justify-between overflow-x-auto touch-auto"
+            style={{
+              scrollBehavior: "smooth",
+              WebkitOverflowScrolling: "touch",
+              scrollbarWidth: "thin",
+              msOverflowStyle: "scrollbar",
+            }}
+          >
+            {categories.map((category, index) => {
+              const imageSrc = getImageSrc(category);
 
-            return (
-              <CarouselItem
-                key={category.id}
-                className="pl-1 basis-1/4 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-[12.5%] 2xl:basis-[10%]"
-              >
-                <Link
-                href={`/category/${category.slug}?page=1`}
-                  className="group cursor-pointer"
+              return (
+                <CarouselItem
+                  key={category.id}
+                  className="pl-1 basis-1/4 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-[12.5%] 2xl:basis-[10%]"
                 >
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 mx-auto mb-3 overflow-hidden transition-all duration-300">
-                    <Image
-                      src={imageSrc}
-                      alt={category.name}
-                      fill
-                      className="object-cover p-2 group-hover:opacity-90 transition-opacity duration-300"
-                      sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, 96px"
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          "/assets/category/air-conditioner.png";
-                      }}
-                    />
-                  </div>
-                </Link>
-              </CarouselItem>
-            );
-          })}
-        </CarouselContent>
-      </Carousel>
-    </div>
-  );
-
-  if (!isLoaded) {
-    return <div className="hidden md:block w-full bg-white py-8 min-h-[200px]" />;
-  }
+                  <Link
+                    href={`/category/${category.slug}?page=1`}
+                    className="group cursor-pointer"
+                  >
+                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-32 md:h-32 mx-auto mb-3 overflow-hidden transition-all duration-300">
+                      <Image
+                        src={imageSrc}
+                        alt={category.name}
+                        fill
+                        className="object-cover p-2 group-hover:opacity-90 transition-opacity duration-300"
+                        sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, 96px"
+                        onError={(e) => {
+                          e.currentTarget.src =
+                            "/assets/category/air-conditioner.png";
+                        }}
+                      />
+                    </div>
+                  </Link>
+                </CarouselItem>
+              );
+            })}
+          </CarouselContent>
+        </Carousel>
+      </div>
+    );
+  };
 
   return (
     <>
