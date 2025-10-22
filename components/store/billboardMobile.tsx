@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -32,6 +32,7 @@ const PrevArrow = (props: any) => {
 };
 
 const HeroSliderMobile: React.FC = () => {
+    const [isLoaded, setIsLoaded] = useState(false);
   const settings = {
     dots: false,
     infinite: true,
@@ -70,12 +71,31 @@ const HeroSliderMobile: React.FC = () => {
     },
     {
       id: 2,
-      src: "/assets/hero/banner-boat.jpg",
+      src: "/assets/hero/banner-boat-2.jpg",
       alt: "Best Television India",
       width: 1000,
       height: 340,
     },
   ];
+
+   useEffect(() => {
+     const loadImages = slides.map((slide) => {
+       return new Promise((resolve) => {
+         const img = new window.Image();
+         img.src = slide.src;
+         img.onload = resolve;
+         img.onerror = resolve; // Handle errors gracefully
+       });
+     });
+ 
+     Promise.all(loadImages).then(() => setIsLoaded(true));
+   }, []);
+  
+    if (!isLoaded) {
+      return (
+        <div className="relative w-full aspect-[3/1] max-h-[600px] bg-transparent" />
+      );
+    }
 
   return (
     <section className="relative w-full block md:hidden">

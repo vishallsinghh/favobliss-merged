@@ -177,3 +177,10 @@ example:
   position: relative;
   overflow: hidden;
 }
+
+.slick-slider,
+.slick-list,
+.slick-track {
+  width: 100% !important;
+  height: 100% !important;
+}

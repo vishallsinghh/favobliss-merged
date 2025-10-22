@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import { useAddress } from "@/hooks/use-address";
 import PincodeDialog from "./PincodeDialog";
 import { getLocationGroups } from "@/actions/get-location-group";
+import Image from "next/image";
 
 const searchCategories = [
   "All",
@@ -433,13 +434,13 @@ export default function DynamicHeader({
         <header className="bg-black text-white py-2 px-6 flex items-center justify-between shadow-md border border-transparent rounded-2xl">
           <div className="flex items-center space-x-4">
             <Link href="/">
-              <img
+              <Image
                 src="/assets/logo.jpg"
                 width="200"
                 height="60"
                 alt="Favobliss"
                 title="Favobliss"
-                className="max-w-full"
+                // className="max-w-full"
                 loading="lazy"
               />
             </Link>

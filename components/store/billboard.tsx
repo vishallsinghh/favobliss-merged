@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -32,6 +32,8 @@ const PrevArrow = (props: any) => {
 };
 
 const HeroSlider: React.FC = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const settings = {
     dots: false,
     infinite: true,
@@ -66,21 +68,40 @@ const HeroSlider: React.FC = () => {
       alt: "Best Television India",
       width: 1000,
       height: 340,
-      priority: true, 
+      priority: true,
     },
     {
       id: 2,
-      src: "/assets/hero/banner-1.webp",
+      src: "/assets/hero/banner-2.webp",
       alt: "Best Television India",
       width: 1000,
       height: 340,
     },
   ];
 
+  useEffect(() => {
+    const loadImages = slides.map((slide) => {
+      return new Promise((resolve) => {
+        const img = new window.Image();
+        img.src = slide.src;
+        img.onload = resolve;
+        img.onerror = resolve; // Handle errors gracefully
+      });
+    });
+
+    Promise.all(loadImages).then(() => setIsLoaded(true));
+  }, []);
+
+  if (!isLoaded) {
+    return (
+      <div className="relative w-full aspect-[3/1] max-h-[600px] bg-transparent" />
+    );
+  }
+
   return (
     <section className="relative w-full hidden md:block">
       <div className="relative w-full aspect-[3/1] max-h-[600px] overflow-hidden px-4 md:px-6 border-0">
-        <Slider {...settings} className="h-full">
+        <Slider {...settings} className="h-full w-full">
           {slides.map((slide) => (
             <div key={slide.id} className="relative w-full h-full">
               <div className="relative w-full h-full">
@@ -91,8 +112,9 @@ const HeroSlider: React.FC = () => {
                   height={slide.height}
                   className="w-full h-full object-fill object-center rounded-2xl"
                   priority={slide.priority || false}
-                  loading={slide.id === 1 ? "eager" : "lazy"}
-                  // Next.js Image auto-handles responsive sizes; if you need custom srcSet, use sizes="100vw" or configure in next.config.js
+                  // loading={slide.id === 1 ? "eager" : "lazy"}
+                  loading="eager"
+                  sizes="100vw"
                 />
 
                 {/* Optional overlay */}
