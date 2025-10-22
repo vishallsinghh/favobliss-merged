@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "sonner";
 import { ModalProvider } from "@/providers/admin/modal-provider";
 import { ThemeProvider } from "@/providers/admin/theme-provider";
 import { SessionProvider } from "next-auth/react";
-import "plyr-react/plyr.css"
+
+import "./globals.css";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -14,9 +14,12 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Store | Admin",
+  title: "Favobliss – Your One-Stop Shop for the Latest Electronics",
+  keywords: [
+    "Electronics online, buy electronics, smartphones, home appliances, gadgets, top brands, best deals, fast delivery, online shopping, Favobliss",
+  ],
   description:
-    "Effortlessly control your ecommerce empire with our intuitive admin panel. Seamlessly manage products, orders, and track revenue for optimal SEO and business success.",
+    "Favobliss Explore a wide range of smartphones, home appliances, and more from top brands at unbeatable prices. Fast delivery &amp; great deals.",
 };
 
 export default function RootLayout({

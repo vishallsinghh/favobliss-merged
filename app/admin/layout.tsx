@@ -5,11 +5,18 @@ import { Navbar } from "@/components/admin/navbar";
 import { ModalProvider } from "@/providers/admin/modal-provider";
 import { ThemeProvider } from "@/providers/admin/theme-provider";
 import "../globals.css";
+import { Metadata } from "next";
 
 interface DashboardLayoutPageProps {
   children: React.ReactNode;
   params: { storeId: string };
 }
+
+export const metadata: Metadata = {
+  title: "Store | Admin",
+  description:
+    "Effortlessly control your ecommerce empire with our intuitive admin panel. Seamlessly manage products, orders, and track revenue for optimal SEO and business success.",
+};
 
 const DashboardLayoutPage = async ({
   children,
