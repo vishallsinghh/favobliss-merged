@@ -50,7 +50,7 @@ const HeroSlider: React.FC = () => {
     arrows: false,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    fade: true,
+    fade: false,
     cssEase: "linear",
     pauseOnHover: true,
     pauseOnFocus: true,
