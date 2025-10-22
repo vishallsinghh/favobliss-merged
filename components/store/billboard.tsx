@@ -70,13 +70,13 @@ const HeroSlider: React.FC = () => {
       height: 340,
       priority: true,
     },
-    {
-      id: 2,
-      src: "/assets/hero/banner-2.webp",
-      alt: "Best Television India",
-      width: 1000,
-      height: 340,
-    },
+    // {
+    //   id: 2,
+    //   src: "/assets/hero/banner-2.webp",
+    //   alt: "Best Television India",
+    //   width: 1000,
+    //   height: 340,
+    // },
   ];
 
   useEffect(() => {
