@@ -26,7 +26,7 @@ import BannerProductSection from "@/components/store/BannerProductSection";
 import BannerImage from "@/components/store/BannerImage";
 import HeroSliderMobile from "@/components/store/billboardMobile";
 
-export const revalidate = 0;
+export const revalidate = 600;
 
 const LandingPage = async ({ params }: { params: { storeId: string } }) => {
   const [

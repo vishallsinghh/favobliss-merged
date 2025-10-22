@@ -10,11 +10,13 @@ export const getLocationGroups = async (
   if (pincode) {
     res = await fetch(
       `${URL}/api/admin/${STORE_ID}/location-group/pincode=${pincode}`,
-      { cache: "no-store" }
+      {
+        next: { revalidate: 600 },
+      }
     );
   } else {
     res = await fetch(`${URL}/api/admin/${STORE_ID}/location-group`, {
-      cache: "no-store",
+      next: { revalidate: 600 },
     });
   }
 
@@ -27,7 +29,9 @@ export const getLocationGroups = async (
 export const getLocationGroupById = async (
   id: string
 ): Promise<LocationGroup> => {
-  const res = await fetch(`${URL}/api/admin/${STORE_ID}/location-group/${id}`);
+  const res = await fetch(`${URL}/api/admin/${STORE_ID}/location-group/${id}`, {
+    next: { revalidate: 600 },
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch location group");

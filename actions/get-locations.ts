@@ -11,11 +11,13 @@ export const getLocations = async (
   if (pincode) {
     res = await fetch(
       `${URL}/api/admin/${STORE_ID}/location/pincode=${pincode}`,
-      { cache: "no-store" }
+      {
+        next: { revalidate: 600 },
+      }
     );
   } else {
     res = await fetch(`${URL}/api/admin/${STORE_ID}/location`, {
-      cache: "no-store",
+      next: { revalidate: 600 },
     });
   }
 

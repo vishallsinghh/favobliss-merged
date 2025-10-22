@@ -10,8 +10,10 @@ export const getCategories = async (storeId?: string): Promise<Category[]> => {
   }
 
   try {
-    const url =`${URL}/api/admin/${STORE_ID}/categories`;
-    const res = await fetch(url, { cache: "no-store" });
+    const url = `${URL}/api/admin/${STORE_ID}/categories`;
+    const res = await fetch(url, {
+      next: { revalidate: 600 },
+    });
     if (!res.ok) {
       console.error(
         `Failed to fetch categories: ${res.status} ${res.statusText}`

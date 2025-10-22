@@ -9,7 +9,7 @@ interface ProductPageProps {
   params: { storeId: string; slug: string };
 }
 
-export const revalidate = 60; 
+export const revalidate = 600; 
 
 export async function generateMetadata(
   { params }: ProductPageProps,

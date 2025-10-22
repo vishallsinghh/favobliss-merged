@@ -17,7 +17,8 @@ import { getSubCategoryBySlug } from "@/actions/get-subcategory";
 import { getLocationGroups } from "@/actions/get-location-group";
 import { getBrands } from "@/actions/get-brands";
 
-// Helper function for retrying API calls
+export const revalidate = 600;
+
 async function withRetry<T>(
   fn: () => Promise<T>,
   retries = 3,

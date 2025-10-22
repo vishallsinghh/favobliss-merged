@@ -14,6 +14,8 @@ import { PriceRange, Brand } from "@/types";
 import Image from "next/image";
 import Breadcrumb from "@/components/store/Breadcrumbs";
 
+export const revalidate = 600;
+
 async function withRetry<T>(
   fn: () => Promise<T>,
   retries = 3,

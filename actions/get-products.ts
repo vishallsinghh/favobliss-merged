@@ -89,7 +89,7 @@ export const getHotDeals = async (query: HotDealsQuery): Promise<Product[]> => {
 
   try {
     const res = await fetch(url, {
-      cache: "no-store",
+      next: { revalidate: 600 },
     });
 
     if (!res.ok) {
