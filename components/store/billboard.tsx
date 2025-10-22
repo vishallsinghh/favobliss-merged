@@ -99,7 +99,7 @@ const HeroSlider: React.FC = () => {
 
   if (!isLoaded) {
     return (
-      <div className="relative w-full aspect-[3/1] max-h-[600px] bg-transparent">
+      <div className="relative w-full aspect-[3/1] max-h-[600px] bg-transparent hidden md:block">
         <Image
           src="/assets/hero/banner-1.webp"
           alt="Best Television India"

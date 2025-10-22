@@ -97,7 +97,7 @@ const HeroSliderMobile: React.FC = () => {
 
   if (!isLoaded) {
     return (
-      <div className="relative w-full aspect-[3/1] max-h-[600px] bg-transparent">
+      <div className="relative w-full aspect-[3/1] max-h-[600px] bg-transparent md:hidden block">
         <Image
           src="/assets/hero/banner-boat.jpg"
           alt="Best Television India"
