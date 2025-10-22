@@ -84,7 +84,7 @@ const HeroSliderMobile: React.FC = () => {
          const img = new window.Image();
          img.src = slide.src;
          img.onload = resolve;
-         img.onerror = resolve; // Handle errors gracefully
+         img.onerror = resolve; 
        });
      });
  
@@ -111,8 +111,8 @@ const HeroSliderMobile: React.FC = () => {
                   height={slide.height}
                   className="w-full h-full object-fill object-center rounded-2xl"
                   priority={slide.priority || false}
-                  loading={slide.id === 1 ? "eager" : "lazy"}
-                  // Next.js Image auto-handles responsive sizes; if you need custom srcSet, use sizes="100vw" or configure in next.config.js
+                  loading="eager"
+                  sizes="100vw"
                 />
 
                 {/* Optional overlay */}
