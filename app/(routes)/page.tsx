@@ -25,6 +25,7 @@ import HomeAppliance from "@/components/store/HomeAppliance";
 import BannerProductSection from "@/components/store/BannerProductSection";
 import BannerImage from "@/components/store/BannerImage";
 import HeroSliderMobile from "@/components/store/billboardMobile";
+import Head from "next/head";
 
 export const revalidate = 600;
 
@@ -48,7 +49,16 @@ const LandingPage = async ({ params }: { params: { storeId: string } }) => {
   ]);
 
   return (
-    <div className="bg-[#f8f8f8] min-h-screen">
+    <>
+    <Head>
+        <link
+          rel="preload"
+          href="/assets/hero/banner-boat.jpg"
+          as="image"
+          fetchPriority="high"
+        />
+      </Head>
+      <div className="bg-[#f8f8f8] min-h-screen">
       <HeroSlider />
       <HeroSliderMobile />
       <CategorySlider categories={categories} />
@@ -155,7 +165,8 @@ const LandingPage = async ({ params }: { params: { storeId: string } }) => {
           </div>
         </div>
       </Container>
-    </div>
+    </div></>
+    
   );
 };
 

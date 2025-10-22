@@ -184,3 +184,7 @@ example:
   width: 100% !important;
   height: 100% !important;
 }
+
+.slick-slide {
+  transition: opacity 0.5s linear;
+}
